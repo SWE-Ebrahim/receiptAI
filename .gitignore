@@ -6,3 +6,7 @@ node_modules/
 dist/
 build/
 coverage/
+backend/node_modules/
+backend/.env
+backend/src/uploads/*
+!backend/src/uploads/.gitkeep
