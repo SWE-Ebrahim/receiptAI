@@ -1,27 +1,53 @@
+# Dependencies
 node_modules/
+backend/node_modules/
+
+# Environment files - Ignore ALL .env files EXCEPT .env.example
 .env
 .env.local
+.env.development
+.env.production
+.env.test
+.env.*
+!.env.example
+
+# Backend .env files
+backend/.env
+backend/.env.*
+!backend/.env.example
+
+# Logs
 *.log
+backend/*.log
+
+# OS files
 .DS_Store
+backend/.DS_Store
+Thumbs.db
+
+# Build outputs
 dist/
 build/
 coverage/
-backend/node_modules/
-backend/.env
-backend/src/uploads/*
-!backend/src/uploads/.gitkeep
-backend/src/logs/*
-!backend/src/logs/.gitkeep
-backend/src/temp/*
-!backend/src/temp/.gitkeep
-backend/src/cache/*
-!backend/src/cache/.gitkeep
-backend/.env.local
-backend/*.log
-backend/.DS_Store
 backend/dist/
 backend/build/
 backend/coverage/
-backend/.env
-.env
-backend/.env.example
+
+# Uploads and temporary files
+backend/src/uploads/*
+!backend/src/uploads/.gitkeep
+
+backend/src/logs/*
+!backend/src/logs/.gitkeep
+
+backend/src/temp/*
+!backend/src/temp/.gitkeep
+
+backend/src/cache/*
+!backend/src/cache/.gitkeep
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
