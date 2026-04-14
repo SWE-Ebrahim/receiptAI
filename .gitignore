@@ -14,7 +14,7 @@ backend/node_modules/
 # Backend .env files
 backend/.env
 backend/.env.*
-backend/.env.example
+!backend/.env.example
 
 # Logs
 *.log
