@@ -13,7 +13,10 @@ backend/node_modules/
 
 # Backend .env files
 backend/.env
-backend/.env.*
+backend/.env.local
+backend/.env.development
+backend/.env.production
+backend/.env.test
 !backend/.env.example
 
 # Logs
@@ -51,3 +54,11 @@ backend/src/cache/*
 .idea/
 *.swp
 *.swo
+.lingma
+
+# Development & Test Scripts (DO NOT PUSH)
+# All development, test, and cleanup scripts are in backend/scripts/
+backend/scripts/
+
+# Security & Audit Reports (Internal Use Only)
+backend/SECURITY_AUDIT.md

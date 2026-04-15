@@ -1,0 +1,66 @@
+@theme {
+  /* Colors - Material You (M3) Green-Teal Palette */
+  --color-primary: #006c4a;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #3fb687;
+  --color-on-primary-container: #00422c;
+  --color-primary-fixed: #85f8c4;
+  --color-on-primary-fixed: #002114;
+  --color-primary-fixed-dim: #68dba9;
+  --color-on-primary-fixed-variant: #005137;
+  
+  --color-secondary: #376850;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #b7ebce;
+  --color-on-secondary-container: #3c6c54;
+  --color-secondary-fixed: #baeed1;
+  --color-on-secondary-fixed: #002113;
+  --color-secondary-fixed-dim: #9ed2b5;
+  --color-on-secondary-fixed-variant: #1e4f3a;
+  
+  --color-tertiary: #a43a3a;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #fc7c78;
+  --color-on-tertiary-container: #711419;
+  --color-tertiary-fixed: #ffdad7;
+  --color-on-tertiary-fixed: #410005;
+  --color-tertiary-fixed-dim: #ffb3af;
+  --color-on-tertiary-fixed-variant: #842225;
+  
+  --color-error: #ba1a1a;
+  --color-on-error: #ffffff;
+  --color-error-container: #ffdad6;
+  --color-on-error-container: #93000a;
+  
+  --color-background: #f8f9ff;
+  --color-on-background: #121c28;
+  --color-surface: #f8f9ff;
+  --color-on-surface: #121c28;
+  --color-surface-bright: #f8f9ff;
+  --color-surface-dim: #d1dbec;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #eef4ff;
+  --color-surface-container: #e5eeff;
+  --color-surface-container-high: #dfe9fa;
+  --color-surface-container-highest: #d9e3f4;
+  --color-inverse-surface: #27313e;
+  --color-inverse-on-surface: #eaf1ff;
+  --color-surface-variant: #d9e3f4;
+  --color-on-surface-variant: #3c4a42;
+  --color-surface-tint: #006c4a;
+  
+  --color-outline: #6c7a71;
+  --color-outline-variant: #bbcabf;
+  --color-inverse-primary: #68dba9;
+
+  /* Border Radius */
+  --radius-default: 1rem;
+  --radius-lg: 2rem;
+  --radius-xl: 3rem;
+  --radius-full: 9999px;
+
+  /* Font Families */
+  --font-headline: 'Manrope', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-label: 'Inter', system-ui, sans-serif;
+}

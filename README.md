@@ -70,6 +70,34 @@ receiptAI automates everything:
 
 ---
 
+## 🔐 Authentication System
+
+### Secure Email-Based Authentication
+receiptAI uses a **secure OTP-based authentication system** to protect your data:
+
+#### Security Features
+- ✅ **Password Strength Requirements**: 8+ characters, uppercase, number, special character
+- ✅ **Email Verification Required**: Account only created after OTP confirmation
+- ✅ **OTP Expiry**: Codes expire in 10 minutes for security
+- ✅ **Auto-Logout**: Sessions expire after 1 hour of inactivity
+- ✅ **Secure Password Reset**: OTP-based password recovery flow
+- ✅ **No Unverified Accounts**: Database stays clean with verified users only
+
+#### How It Works
+1. **Signup** → Enter email + strong password → Receive 6-digit OTP via email
+2. **Verify OTP** → Enter code from email → Account created automatically
+3. **Login** → Email + password → Access dashboard
+4. **Forgot Password** → Email → OTP → Set new password
+5. **Auto-Logout** → No activity for 1 hour → Session expires
+
+#### Email Delivery
+- Uses **Nodemailer with Gmail SMTP** for reliable delivery
+- Professional HTML emails with clear OTP display
+- Works with any email provider (Gmail, Hotmail, Yahoo, etc.)
+- No domain verification required
+
+---
+
 ## 🛠️ Technology Stack
 
 ### Built With Free Tools
