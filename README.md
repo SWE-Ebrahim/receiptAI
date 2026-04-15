@@ -254,3 +254,65 @@ receiptAI will be successful when:
 **Last Updated**: April 14, 2026  
 **Version**: 1.0.0  
 **Status**: In Development
+
+---
+
+## 📂 Project Structure
+
+```
+receiptAI/
+├── backend/                 # Node.js/Express API server
+│   ├── src/                # Source code
+│   ├── scripts/            # Development/test scripts (git ignored)
+│   ├── database/           # SQL migrations (git ignored)
+│   ├── .env.example        # Environment template
+│   └── README.md           # Backend documentation
+├── receipt-ai/             # React frontend application
+│   ├── src/                # Source code
+│   ├── public/             # Static assets
+│   └── README.md           # Frontend documentation
+├── doc/                    # Project documentation
+└── README.md               # This file (project overview)
+```
+
+### 📖 Documentation
+- **[Backend README](backend/README.md)** - API endpoints, authentication, deployment
+- **[Frontend README](receipt-ai/README.md)** - UI components, styling, build process
+- **[Security Audit](backend/SECURITY_AUDIT.md)** - Security review (internal use)
+
+---
+
+## 📅 Development Timeline
+
+### April 14, 2026 - Authentication System Complete ✅
+
+#### Morning Session: Email Service & Security
+- Switched from Resend to Nodemailer with Gmail SMTP
+- Fixed OTP email delivery issues
+- Implemented secure pending registration flow
+- Created `pending_registrations` table in Supabase
+- Added password strength validation
+
+#### Afternoon Session: Login & Dashboard
+- Built complete login page with eye icons for password visibility
+- Removed "Remember me" checkbox (security best practice)
+- Implemented auto-logout after 1 hour of inactivity
+- Added activity tracking (mouse, keyboard, scroll, touch)
+- Created dashboard page with user information display
+- Built forgot password flow with OTP verification
+
+#### Evening Session: Code Quality & Organization
+- Added comprehensive comments throughout codebase
+- Organized development scripts in `backend/scripts/` folder
+- Updated `.gitignore` to protect sensitive files
+- Created security audit documentation
+- Optimized performance (passive event listeners, memory cleanup)
+- Created detailed README files for backend and frontend
+
+**Result**: Production-ready authentication system with:
+- ✅ Secure email-based signup with OTP
+- ✅ Login with session management
+- ✅ Password reset via OTP
+- ✅ Auto-logout functionality
+- ✅ Clean, documented code
+- ✅ Comprehensive documentation
