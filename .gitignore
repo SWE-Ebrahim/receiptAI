@@ -49,6 +49,10 @@ backend/src/temp/*
 backend/src/cache/*
 !backend/src/cache/.gitkeep
 
+# Google Cloud Vision Service Account Key
+backend/config/google-vision-key.json
+backend/config/*-key.json
+
 # IDE
 .vscode/
 .idea/

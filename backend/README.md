@@ -6,7 +6,7 @@ RESTful API server for receiptAI - Smart Expense Tracker application. Handles au
 
 ## 📅 Project Timeline
 
-### Phase 1: Authentication System (April 14, 2026)
+### Phase 1: Authentication System (April 14, 2026 - Morning)
 - ✅ Implemented secure email-based signup with OTP verification
 - ✅ Created login system with session management
 - ✅ Built forgot password flow with OTP-based reset
@@ -17,6 +17,26 @@ RESTful API server for receiptAI - Smart Expense Tracker application. Handles au
 - ✅ Organized development scripts in `scripts/` folder
 - ✅ Added comprehensive security audit documentation
 - ✅ Documented all code with detailed comments
+
+### Phase 2: Receipt Management & OCR (April 14, 2026 - Afternoon)
+- ✅ Built receipt upload and scanning endpoints
+- ✅ Integrated multi-engine OCR (Tesseract.js + ocr.space + Google Vision)
+- ✅ Implemented category management API with CRUD operations
+- ✅ Created spending summary endpoints with date filtering
+- ✅ Added transaction history with pagination
+- ✅ Built PDF export functionality (server-side with pdfkit)
+- ✅ Implemented currency conversion utilities
+- ✅ Added file upload middleware with validation
+
+### Phase 3: Performance Optimization (April 14, 2026 - Evening)
+- ✅ Conducted comprehensive performance audit (16 files reviewed)
+- ✅ Fixed N+1 query problem in category fetching (91% query reduction)
+- ✅ Replaced listUsers() with direct user lookups (100-1000x faster at scale)
+- ✅ Optimized data transfer in category breakdown (30-40% reduction)
+- ✅ Implemented in-memory caching layer with TTL (5-minute cache)
+- ✅ Added automatic cache invalidation on data changes
+- ✅ Reduced database load by 50-80% for repeated requests
+- ✅ Created performance optimization documentation
 
 **Status**: ✅ Complete and Production-Ready
 
@@ -161,6 +181,36 @@ Body: { email, newPassword }
 | POST | `/logout` | ✅ | Logout user |
 | GET | `/me` | ✅ | Get current user info |
 
+### Receipt Routes (`/api/receipts`)
+
+| Method | Endpoint | Auth Required | Description |
+|--------|----------|---------------|-------------|
+| GET | `/` | ✅ | Get all receipts (with filters) |
+| GET | `/:id` | ✅ | Get single receipt by ID |
+| POST | `/` | ✅ | Upload and save new receipt |
+| PUT | `/:id` | ✅ | Update receipt details |
+| DELETE | `/:id` | ✅ | Delete a receipt |
+| DELETE | `/all` | ✅ | Delete all user receipts |
+| GET | `/spending-summary` | ✅ | Get spending analytics |
+| GET | `/category-breakdown` | ✅ | Get category spending breakdown |
+| POST | `/export-pdf` | ✅ | Export receipts as PDF |
+
+### Category Routes (`/api/categories`)
+
+| Method | Endpoint | Auth Required | Description |
+|--------|----------|---------------|-------------|
+| GET | `/` | ✅ | Get all user categories |
+| POST | `/` | ✅ | Create new category |
+| PUT | `/:id` | ✅ | Update category |
+| DELETE | `/:id` | ✅ | Delete category |
+
+### Scan Routes (`/api/scan`)
+
+| Method | Endpoint | Auth Required | Description |
+|--------|----------|---------------|-------------|
+| POST | `/ocr` | ✅ | Extract data from receipt image |
+| POST | `/upload` | ✅ | Upload file for scanning |
+
 ### Health Check
 
 | Method | Endpoint | Description |
@@ -178,14 +228,27 @@ backend/
 │   ├── config/
 │   │   └── supabase.js          # Supabase client configuration
 │   ├── controllers/
-│   │   └── authController.js    # Authentication logic (756 lines)
+│   │   ├── authController.js    # Authentication logic (811 lines)
+│   │   ├── receiptController.js # Receipt CRUD & exports (1360+ lines)
+│   │   ├── categoryController.js # Category management (274 lines)
+│   │   └── scanController.js    # OCR scanning pipeline (450+ lines)
 │   ├── middleware/
-│   │   └── auth.js              # Auth protection middleware
+│   │   ├── auth.js              # Auth protection middleware
+│   │   └── upload.js            # File upload handling
 │   ├── routes/
-│   │   └── authRoutes.js        # Route definitions
+│   │   ├── authRoutes.js        # Authentication routes
+│   │   ├── receiptRoutes.js     # Receipt endpoints
+│   │   ├── categoryRoutes.js    # Category endpoints
+│   │   └── scanRoutes.js        # OCR scanning routes
 │   ├── services/
-│   │   └── emailService.js      # Email delivery (Nodemailer)
+│   │   ├── emailService.js      # Email delivery (Nodemailer)
+│   │   ├── pdfService.js        # PDF generation (pdfkit)
+│   │   └── storageService.js    # File storage management
 │   ├── utils/
+│   │   ├── cache.js             # In-memory caching layer (NEW)
+│   │   ├── currencyConverter.js # Currency conversion utilities
+│   │   ├── fileCleanup.js       # Temporary file cleanup
+│   │   ├── helpers.js           # Helper functions
 │   │   └── logger.js            # Logging utility (dev/prod aware)
 │   └── server.js                # Express server setup
 ├── scripts/                     # Development/test scripts (git ignored)
@@ -193,6 +256,7 @@ backend/
 │   ├── clear-database.js        # Clear all database records
 │   ├── clear-everything.js      # Full system reset
 │   ├── clear-users.js           # Delete all users
+│   ├── delete-all-receipts.js   # Remove all receipts
 │   ├── setup-pending-registrations.js  # Create DB table
 │   ├── test-email.js            # Test email delivery
 │   ├── CLEANUP.md               # Cleanup documentation
@@ -205,6 +269,8 @@ backend/
 ├── .env.example                 # Environment template
 ├── package.json                 # Dependencies
 ├── SECURITY_AUDIT.md            # Security audit report (internal)
+├── PERFORMANCE-TEST.md          # Backend performance analysis
+├── PERFORMANCE-OPTIMIZATIONS-COMPLETED.md # Optimization details
 └── README.md                    # This file
 ```
 

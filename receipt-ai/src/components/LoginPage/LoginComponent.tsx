@@ -31,7 +31,7 @@ const LoginComponent = () => {
 
     // Debounced logout function to prevent multiple executions
     const performLogout = () => {
-      localStorage.removeItem('auth_token')
+      localStorage.removeItem('authToken')
       localStorage.removeItem('user_data')
       navigate('/login')
     }
@@ -83,7 +83,7 @@ const LoginComponent = () => {
       }
 
       // Store authentication tokens securely
-      localStorage.setItem('auth_token', result.session.access_token)
+      localStorage.setItem('authToken', result.session.access_token)
       localStorage.setItem('user_data', JSON.stringify(result.user))
 
       // Redirect to dashboard on successful login

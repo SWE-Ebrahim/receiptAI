@@ -4,6 +4,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const { testConnection } = require('./config/supabase');
+const { scheduleCleanup } = require('./utils/fileCleanup');
 
 
 const app = express();
@@ -104,6 +105,15 @@ app.get('/test-db', async (req, res) => {
 const authRoutes = require('./routes/authRoutes');
 app.use('/api/auth', authRoutes);
 
+const receiptRoutes = require('./routes/receiptRoutes');
+app.use('/api/receipts', receiptRoutes);
+
+const scanRoutes = require('./routes/scanRoutes');
+app.use('/api/scan', scanRoutes);
+
+const categoryRoutes = require('./routes/categoryRoutes');
+app.use('/api/categories', categoryRoutes);
+
 
 
 // ============================================
@@ -121,14 +131,20 @@ const startServer = async () => {
       process.exit(1);
     }
     
+    // Start scheduled file cleanup
+    scheduleCleanup();
+    
     // Start Express server
-    app.listen(PORT, () => {
+    app.listen(PORT, '0.0.0.0', () => {
       console.log('\n========================================');
       console.log('🚀 receiptAI Backend Server');
       console.log('========================================');
       console.log(`✅ Server running on port ${PORT}`);
       console.log(`🌍 Environment: ${process.env.NODE_ENV}`);
-      console.log(`🔗 Health check: http://localhost:${PORT}/health`);
+      console.log(`📡 Listening on all network interfaces (0.0.0.0)`);
+      console.log(`🤖 AI Engine: OpenAI GPT-4o Vision`);
+      console.log(`🔗 Local: http://localhost:${PORT}/health`);
+      console.log(`🔗 Network: http://192.168.1.143:${PORT}/health`);
       console.log(`💾 DB test: http://localhost:${PORT}/test-db`);
       console.log('========================================\n');
     });

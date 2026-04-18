@@ -83,16 +83,14 @@ const signup = async (req, res) => {
     }
 
     // Check if user already exists and is verified
-    const { data: existingUsers, error: listError } = await supabaseAdmin.auth.admin.listUsers();
+    // OPTIMIZED: Direct user lookup instead of fetching all users
+    const { data: existingUser, error: userError } = await supabaseAdmin.auth.admin.getUserByEmail(email);
     
-    if (!listError) {
-      const existingUser = existingUsers.users.find(u => u.email === email);
-      if (existingUser && existingUser.email_confirmed_at) {
-        return res.status(400).json({
-          success: false,
-          message: "User with this email already exists and is verified. Please login.",
-        });
-      }
+    if (!userError && existingUser?.user && existingUser.user.email_confirmed_at) {
+      return res.status(400).json({
+        success: false,
+        message: "User with this email already exists and is verified. Please login.",
+      });
     }
 
     // Generate 6-digit OTP
@@ -386,12 +384,19 @@ const login = async (req, res) => {
       });
     }
 
+    // Get username from user_metadata (stored as full_name during signup)
+    const userMetadata = data.user.user_metadata || {};
+    const fullName = userMetadata.full_name || '';
+    
     res.json({
       success: true,
       message: "Login successful",
       user: {
         id: data.user.id,
         email: data.user.email,
+        username: fullName || data.user.email.split('@')[0],
+        display_name: fullName || data.user.email.split('@')[0],
+        name: fullName || data.user.email.split('@')[0],
       },
       session: {
         access_token: data.session.access_token,
@@ -508,19 +513,12 @@ const forgotPassword = async (req, res) => {
     }
 
     // Check if user exists
-    const { data: userList, error: listError } = await supabaseAdmin.auth.admin.listUsers();
+    // OPTIMIZED: Direct user lookup instead of fetching all users
+    const { data: userData, error: userError } = await supabaseAdmin.auth.admin.getUserByEmail(email);
     
-    if (listError) {
-      return res.status(500).json({
-        success: false,
-        message: "Failed to fetch users",
-        error: listError.message,
-      });
-    }
+    const user = userData?.user;
 
-    const user = userList.users.find(u => u.email === email);
-
-    if (!user || !user.email_confirmed_at) {
+    if (!user || !user.email_confirmed_at || userError) {
       // Don't reveal if email exists or not for security
       return res.status(200).json({
         success: true,
@@ -696,10 +694,11 @@ const resetPassword = async (req, res) => {
     }
 
     // Get the user
-    const { data: userList } = await supabaseAdmin.auth.admin.listUsers();
-    const user = userList.users.find(u => u.email === email);
+    // OPTIMIZED: Direct user lookup instead of fetching all users
+    const { data: userData, error: userError } = await supabaseAdmin.auth.admin.getUserByEmail(email);
+    const user = userData?.user;
 
-    if (!user) {
+    if (!user || userError) {
       return res.status(404).json({
         success: false,
         message: "User not found",
@@ -742,6 +741,62 @@ const resetPassword = async (req, res) => {
   }
 };
 
+// ============================================
+// UPDATE USER PROFILE (Name)
+// ============================================
+const updateProfile = async (req, res) => {
+  try {
+    const { name } = req.body;
+    const userId = req.user.id; // From auth middleware
+
+    if (!name || !name.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: "Name is required",
+      });
+    }
+
+    const trimmedName = name.trim();
+
+    // Update user metadata in Supabase Auth (both name and display_name)
+    const { data, error } = await supabaseAdmin.auth.admin.updateUserById(userId, {
+      user_metadata: { 
+        name: trimmedName,
+        display_name: trimmedName // Keep display_name in sync with name
+      },
+    });
+
+    if (error) {
+      console.error("❌ Failed to update profile:", error);
+      return res.status(500).json({
+        success: false,
+        message: "Failed to update profile",
+        error: error.message,
+      });
+    }
+
+    console.log(`✅ Profile updated for user ${userId}: ${trimmedName}`);
+
+    res.json({
+      success: true,
+      message: "Profile updated successfully",
+      user: {
+        id: data.user.id,
+        email: data.user.email,
+        name: data.user.user_metadata?.name || trimmedName,
+        display_name: data.user.user_metadata?.display_name || trimmedName,
+      },
+    });
+  } catch (error) {
+    console.error("❌ Update profile error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   signup,
   verifyOTP,
@@ -752,4 +807,5 @@ module.exports = {
   forgotPassword,
   verifyResetOTP,
   resetPassword,
+  updateProfile,
 };
