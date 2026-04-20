@@ -5,17 +5,22 @@
  * Handles base URL, authentication headers, and error handling.
  */
 
-// Detect if running on mobile/external device
+// Get API base URL from environment variable
 const getApiBaseUrl = (): string => {
-  // If accessing from phone/tablet, use computer's IP
+  // In production (Vercel), always use environment variable
+  if (import.meta.env.PROD) {
+    return import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+  }
+  
+  // In development, detect if accessing from mobile/external device
   const host = window.location.hostname;
   
-  // If not localhost, use the same host for API
+  // If not localhost, use the same host for API (mobile testing)
   if (host !== 'localhost' && host !== '127.0.0.1') {
     return `http://${host}:5000/api`;
   }
   
-  // Otherwise use localhost for desktop development
+  // Otherwise use environment variable or localhost for desktop development
   return import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 };
 

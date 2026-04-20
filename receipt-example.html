@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample Receipt - Test OCR</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Courier New', monospace;
+            background: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .receipt {
+            background: white;
+            width: 100%;
+            max-width: 400px;
+            padding: 30px 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 2px dashed #000;
+            padding-bottom: 15px;
+        }
+        
+        .store-name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+        }
+        
+        .store-info {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .receipt-meta {
+            margin: 15px 0;
+            font-size: 13px;
+            border-bottom: 1px dashed #ccc;
+            padding-bottom: 10px;
+        }
+        
+        .meta-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 5px 0;
+        }
+        
+        .items {
+            margin: 15px 0;
+        }
+        
+        .item {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+            font-size: 14px;
+        }
+        
+        .item-name {
+            flex: 1;
+        }
+        
+        .item-qty {
+            margin: 0 10px;
+            color: #666;
+        }
+        
+        .item-price {
+            font-weight: bold;
+        }
+        
+        .divider {
+            border-top: 1px dashed #000;
+            margin: 15px 0;
+        }
+        
+        .totals {
+            margin: 15px 0;
+        }
+        
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+            font-size: 14px;
+        }
+        
+        .grand-total {
+            font-size: 18px;
+            font-weight: bold;
+            border-top: 2px solid #000;
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+        
+        .payment {
+            margin: 15px 0;
+            font-size: 13px;
+            border-bottom: 1px dashed #ccc;
+            padding-bottom: 10px;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .barcode {
+            text-align: center;
+            margin: 15px 0;
+            font-size: 20px;
+            letter-spacing: 3px;
+        }
+        
+        .thank-you {
+            font-size: 14px;
+            font-weight: bold;
+            margin: 10px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="receipt">
+        <div class="header">
+            <div class="store-name">SUPERMARKET PLUS</div>
+            <div class="store-info">
+                123 Main Street<br>
+                Dubai, UAE<br>
+                Tel: +971-4-123-4567<br>
+                VAT No: 123456789000003
+            </div>
+        </div>
+        
+        <div class="receipt-meta">
+            <div class="meta-row">
+                <span>Receipt #:</span>
+                <span>RCT-2026-0420-1547</span>
+            </div>
+            <div class="meta-row">
+                <span>Date:</span>
+                <span>20/04/2026</span>
+            </div>
+            <div class="meta-row">
+                <span>Time:</span>
+                <span>15:47:32</span>
+            </div>
+            <div class="meta-row">
+                <span>Cashier:</span>
+                <span>Ahmed M.</span>
+            </div>
+        </div>
+        
+        <div class="items">
+            <div class="item">
+                <span class="item-name">Fresh Milk 1L</span>
+                <span class="item-qty">x2</span>
+                <span class="item-price">AED 12.00</span>
+            </div>
+            <div class="item">
+                <span class="item-name">Whole Wheat Bread</span>
+                <span class="item-qty">x1</span>
+                <span class="item-price">AED 8.50</span>
+            </div>
+            <div class="item">
+                <span class="item-name">Chicken Breast 1kg</span>
+                <span class="item-qty">x1</span>
+                <span class="item-price">AED 32.00</span>
+            </div>
+            <div class="item">
+                <span class="item-name">Rice Basmati 5kg</span>
+                <span class="item-qty">x1</span>
+                <span class="item-price">AED 45.00</span>
+            </div>
+            <div class="item">
+                <span class="item-name">Tomatoes 1kg</span>
+                <span class="item-qty">x2</span>
+                <span class="item-price">AED 10.00</span>
+            </div>
+            <div class="item">
+                <span class="item-name">Olive Oil 500ml</span>
+                <span class="item-qty">x1</span>
+                <span class="item-price">AED 28.00</span>
+            </div>
+            <div class="item">
+                <span class="item-name">Orange Juice 1L</span>
+                <span class="item-qty">x1</span>
+                <span class="item-price">AED 15.00</span>
+            </div>
+            <div class="item">
+                <span class="item-name">Yogurt Pack</span>
+                <span class="item-qty">x3</span>
+                <span class="item-price">AED 18.00</span>
+            </div>
+        </div>
+        
+        <div class="divider"></div>
+        
+        <div class="totals">
+            <div class="total-row">
+                <span>Subtotal:</span>
+                <span>AED 168.50</span>
+            </div>
+            <div class="total-row">
+                <span>VAT (5%):</span>
+                <span>AED 8.43</span>
+            </div>
+            <div class="total-row grand-total">
+                <span>TOTAL:</span>
+                <span>AED 176.93</span>
+            </div>
+        </div>
+        
+        <div class="payment">
+            <div class="meta-row">
+                <span>Payment Method:</span>
+                <span>Credit Card</span>
+            </div>
+            <div class="meta-row">
+                <span>Card Type:</span>
+                <span>Visa ****4532</span>
+            </div>
+            <div class="meta-row">
+                <span>Auth Code:</span>
+                <span>847562</span>
+            </div>
+        </div>
+        
+        <div class="barcode">
+            ||||| |||| ||||| ||||
+        </div>
+        
+        <div class="thank-you">
+            Thank You For Shopping!
+        </div>
+        
+        <div class="footer">
+            Please keep this receipt for your records<br>
+            Exchange within 14 days with receipt<br>
+            www.supermarketplus.ae
+        </div>
+    </div>
+</body>
+</html>
