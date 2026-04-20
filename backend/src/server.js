@@ -20,11 +20,11 @@ app.use(helmet());
 // CORS (allow frontend to connect)
 app.use(cors());
 
-// Parse JSON bodies
-app.use(express.json());
+// Parse JSON bodies (increase limit for base64 images)
+app.use(express.json({ limit: '50mb' }));
 
 // Parse URL-encoded bodies
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 // HTTP request logging (development)
 if (process.env.NODE_ENV === 'development') {
