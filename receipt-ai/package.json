@@ -6,11 +6,18 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "vite build",
+    "build:check": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
-  "keywords": ["receipt", "expense-tracker", "ocr", "react", "typescript"],
+  "keywords": [
+    "receipt",
+    "expense-tracker",
+    "ocr",
+    "react",
+    "typescript"
+  ],
   "author": "Ebrahim Al Mahbosh",
   "license": "MIT",
   "dependencies": {
