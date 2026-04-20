@@ -10,7 +10,7 @@
  * - No sensitive data exposure in error messages
  */
 
-const { supabaseAdmin } = require("../config/supabase");
+const { supabase, supabaseAdmin } = require("../config/supabase");
 const { sendOTPEmail } = require("../services/emailService");
 // ============================================
 // SIGN UP (send OTP to email)
@@ -50,12 +50,78 @@ const signup = async (req, res) => {
       });
     }
 
-    // Email validation
+    // Email validation - Basic format check
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return res.status(400).json({
         success: false,
         message: "Invalid email format",
+      });
+    }
+
+    // Email domain validation - STRICT: Only allow real, existing email providers
+    const emailDomain = email.split('@')[1]?.toLowerCase();
+    
+    // STRICT whitelist of legitimate email providers only
+    const allowedDomains = [
+      // Gmail family
+      'gmail.com', 'googlemail.com',
+      // Outlook/Hotmail family
+      'outlook.com', 'hotmail.com', 'live.com', 'msn.com',
+      // Yahoo family
+      'yahoo.com', 'yahoo.co.uk', 'yahoo.ca', 'yahoo.in', 'yahoo.co.jp',
+      // Apple family
+      'icloud.com', 'me.com', 'mac.com',
+      // ProtonMail
+      'protonmail.com', 'proton.me', 'pm.me',
+      // Other major providers
+      'aol.com',
+      'zoho.com',
+      'yandex.com', 'yandex.ru',
+      'mail.com',
+      'gmx.com', 'gmx.net', 'gmx.at', 'gmx.ch',
+    ];
+    
+    // Common typos to detect and suggest corrections
+    const commonTypos = {
+      'gail.com': 'gmail.com',
+      'gamil.com': 'gmail.com',
+      'gmial.com': 'gmail.com',
+      'gnail.com': 'gmail.com',
+      'gmal.com': 'gmail.com',
+      'gmaill.com': 'gmail.com',
+      'gmai.com': 'gmail.com',
+      'coldmail.com': 'gmail.com',
+      'hotail.com': 'hotmail.com',
+      'hotmal.com': 'hotmail.com',
+      'hotmial.com': 'hotmail.com',
+      'hotmil.com': 'hotmail.com',
+      'outllok.com': 'outlook.com',
+      'outlok.com': 'outlook.com',
+      'outloo.com': 'outlook.com',
+      'outlook.co': 'outlook.com',
+      'yaho.com': 'yahoo.com',
+      'yhaoo.com': 'yahoo.com',
+      'yaoo.com': 'yahoo.com',
+      'ycpoo.com': 'yahoo.com',
+      'protonmal.com': 'protonmail.com',
+      'protonmal.com': 'protonmail.com',
+    };
+    
+    // Check if it's a common typo first
+    if (commonTypos[emailDomain]) {
+      return res.status(400).json({
+        success: false,
+        message: `Did you mean ${emailDomain.includes('hotail') ? 'hotmail.com' : commonTypos[emailDomain]}? Please check your email address for typos.`,
+        suggestedCorrection: commonTypos[emailDomain]
+      });
+    }
+    
+    // STRICT: Only allow domains in the whitelist
+    if (!allowedDomains.includes(emailDomain)) {
+      return res.status(400).json({
+        success: false,
+        message: "Please use a valid email address from a supported provider: Gmail, Outlook, Hotmail, Yahoo, iCloud, ProtonMail, AOL, or Zoho.",
       });
     }
 
@@ -83,10 +149,12 @@ const signup = async (req, res) => {
     }
 
     // Check if user already exists and is verified
-    // OPTIMIZED: Direct user lookup instead of fetching all users
-    const { data: existingUser, error: userError } = await supabaseAdmin.auth.admin.getUserByEmail(email);
+    // Use listUsers with email filter (Supabase Admin API limitation)
+    const { data: usersList, error: userError } = await supabaseAdmin.auth.admin.listUsers();
     
-    if (!userError && existingUser?.user && existingUser.user.email_confirmed_at) {
+    const existingUser = usersList?.users?.find(u => u.email === email);
+    
+    if (!userError && existingUser && existingUser.email_confirmed_at) {
       return res.status(400).json({
         success: false,
         message: "User with this email already exists and is verified. Please login.",
@@ -251,6 +319,24 @@ const verifyOTP = async (req, res) => {
 
     console.log(`✅ User account created successfully: ${email}`);
 
+    // Auto-login: Sign in the user immediately after account creation
+    console.log('🔑 Attempting auto-login for:', pendingReg.email);
+    console.log('📝 Password length from DB:', pendingReg.password_hash?.length);
+    
+    const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+      email: pendingReg.email,
+      password: pendingReg.password_hash,
+    });
+
+    if (signInError) {
+      console.error('❌ Auto-login failed:', signInError.message);
+      console.error('Full error:', JSON.stringify(signInError, null, 2));
+      console.log('⚠️ User will need to login manually');
+    } else {
+      console.log('✅ Auto-login successful, session created');
+      console.log('Session expires at:', signInData.session?.expires_at);
+    }
+
     res.status(200).json({
       success: true,
       message: "Email verified successfully! Your account has been created.",
@@ -259,6 +345,10 @@ const verifyOTP = async (req, res) => {
         email: authData.user.email,
         full_name: pendingReg.full_name,
       },
+      // Return session token for auto-login
+      session: signInData?.session || null,
+      access_token: signInData?.session?.access_token || null,
+      refresh_token: signInData?.session?.refresh_token || null,
     });
   } catch (error) {
     console.error("❌ Verify OTP error:", error);
@@ -513,16 +603,20 @@ const forgotPassword = async (req, res) => {
     }
 
     // Check if user exists
-    // OPTIMIZED: Direct user lookup instead of fetching all users
-    const { data: userData, error: userError } = await supabaseAdmin.auth.admin.getUserByEmail(email);
-    
-    const user = userData?.user;
+    const { data: usersList, error: userError } = await supabaseAdmin.auth.admin.listUsers();
+    const user = usersList?.users?.find(u => u.email === email);
 
-    if (!user || !user.email_confirmed_at || userError) {
-      // Don't reveal if email exists or not for security
-      return res.status(200).json({
-        success: true,
-        message: "If an account exists with this email, an OTP has been sent.",
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "No account found with this email address. Please check your email or sign up.",
+      });
+    }
+
+    if (!user.email_confirmed_at) {
+      return res.status(400).json({
+        success: false,
+        message: "This email has not been verified yet. Please complete signup first.",
       });
     }
 
@@ -694,9 +788,8 @@ const resetPassword = async (req, res) => {
     }
 
     // Get the user
-    // OPTIMIZED: Direct user lookup instead of fetching all users
-    const { data: userData, error: userError } = await supabaseAdmin.auth.admin.getUserByEmail(email);
-    const user = userData?.user;
+    const { data: usersList, error: userError } = await supabaseAdmin.auth.admin.listUsers();
+    const user = usersList?.users?.find(u => u.email === email);
 
     if (!user || userError) {
       return res.status(404).json({

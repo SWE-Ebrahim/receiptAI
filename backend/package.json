@@ -1,17 +1,17 @@
 {
-  "name": "backend",
+  "name": "receiptai-backend",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "RESTful API server for receiptAI - Smart Expense Tracker",
+  "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
     "check-env": "node check-env.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": ["receipt", "expense-tracker", "ocr", "ai", "scanning"],
+  "author": "Ebrahim Al Mahbosh",
+  "license": "MIT",
   "type": "commonjs",
   "dependencies": {
     "@google-cloud/vision": "^5.3.5",

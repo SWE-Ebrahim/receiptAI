@@ -46,7 +46,7 @@ const Footer = () => {
         </div>
         
         <p className="text-xs text-on-surface-variant/40 font-medium">
-          © 2024 receiptAI. The Digital Curator.
+          © 2026 receiptAI. The Digital Curator.
         </p>
       </div>
     </footer>

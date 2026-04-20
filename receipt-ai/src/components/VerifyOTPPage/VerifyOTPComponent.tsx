@@ -5,8 +5,8 @@ import Footer from './Footer'
 const VerifyOTPComponent = () => {
   const handleVerifySuccess = () => {
     console.log('✅ OTP verified successfully!')
-    // TODO: Navigate to dashboard or login
-    window.location.href = '/login'
+    // User will be redirected to dashboard by VerifyOTPForm
+    // No need to redirect here
   }
 
   return (

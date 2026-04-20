@@ -7,7 +7,7 @@
  * All receipts are stored in AED in the database
  */
 
-// Fixed exchange rates to AED (as of 2024)
+// Fixed exchange rates to AED (as of 2026)
 // These rates are stable and won't change frequently
 const EXCHANGE_RATES_TO_AED = {
   'AED': 1.0,           // UAE Dirham (base)

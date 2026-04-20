@@ -266,3 +266,71 @@ exports.deleteCategory = async (req, res) => {
     });
   }
 };
+
+/**
+ * Delete ALL categories for the authenticated user
+ */
+exports.deleteAllCategories = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    console.log('🗑️ Deleting all categories for user:', userId);
+
+    // First, check if user has any categories
+    const { data: existingCategories, error: fetchError } = await supabase
+      .from('categories')
+      .select('id')
+      .eq('user_id', userId);
+
+    if (fetchError) {
+      console.error('❌ Error fetching categories:', fetchError);
+      return res.status(500).json({
+        success: false,
+        message: 'Failed to check categories',
+        error: fetchError.message
+      });
+    }
+
+    // If no categories exist, return success with info message
+    if (!existingCategories || existingCategories.length === 0) {
+      console.log('ℹ️ No categories found for user');
+      return res.json({
+        success: true,
+        message: 'No categories to delete',
+        count: 0
+      });
+    }
+
+    console.log(`🗑️ Found ${existingCategories.length} categories to delete`);
+
+    // Delete all categories for this user
+    const { error } = await supabase
+      .from('categories')
+      .delete()
+      .eq('user_id', userId);
+
+    if (error) {
+      console.error('❌ Error deleting all categories:', error);
+      return res.status(500).json({
+        success: false,
+        message: 'Failed to delete categories',
+        error: error.message
+      });
+    }
+
+    console.log(`✅ Deleted ${existingCategories.length} categories!`);
+
+    res.json({
+      success: true,
+      message: `All ${existingCategories.length} categories deleted successfully`,
+      count: existingCategories.length
+    });
+  } catch (error) {
+    console.error('❌ Server error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+      error: error.message
+    });
+  }
+};

@@ -64,16 +64,42 @@ const VerifyOTPForm = ({ onVerifySuccess }: VerifyOTPFormProps) => {
         throw new Error(data.message || 'Verification failed')
       }
 
+      console.log('✅ OTP verification response:', data)
+      console.log('Access token present:', !!data.access_token)
+      console.log('Refresh token present:', !!data.refresh_token)
+
       setSuccess('Email verified successfully! Redirecting...')
       
-      // Wait a moment then redirect or call callback
+      // Store auth tokens for auto-login
+      if (data.access_token && data.refresh_token) {
+        console.log('💾 Storing tokens in localStorage')
+        localStorage.setItem('authToken', data.access_token)
+        localStorage.setItem('refresh_token', data.refresh_token)
+        localStorage.setItem('user', JSON.stringify(data.user))
+        
+        // Verify tokens were actually stored
+        const verifyToken = localStorage.getItem('authToken')
+        console.log('✅ Token verification:', verifyToken ? 'SUCCESS' : 'FAILED')
+        console.log('✅ Tokens stored, authToken:', verifyToken?.substring(0, 20) + '...')
+      } else {
+        console.warn('⚠️ No tokens received from backend')
+        console.log('Response data keys:', Object.keys(data))
+      }
+      
+      // Wait longer to ensure localStorage is fully written and DOM updates
       setTimeout(() => {
+        console.log('🔄 Navigating to dashboard...')
+        console.log('Current authToken:', localStorage.getItem('authToken') ? 'EXISTS' : 'MISSING')
+        
+        // Call the callback if provided (for custom handling)
         if (onVerifySuccess) {
           onVerifySuccess()
-        } else {
-          navigate('/login')
         }
-      }, 1500)
+        
+        // Always navigate to dashboard after OTP verification
+        console.log('➡️ Redirecting to /dashboard')
+        navigate('/dashboard', { replace: true })
+      }, 2000)
     } catch (err: any) {
       setError(err.message || 'Failed to verify OTP')
       setOtpCode('')

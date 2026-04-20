@@ -9,7 +9,8 @@ const {
   getCategories,
   createCategory,
   updateCategory,
-  deleteCategory
+  deleteCategory,
+  deleteAllCategories
 } = require('../controllers/categoryController');
 
 // All routes require authentication
@@ -24,7 +25,10 @@ router.post('/', createCategory);
 // PUT /api/categories/:id - Update category
 router.put('/:id', updateCategory);
 
-// DELETE /api/categories/:id - Delete category
+// DELETE /api/categories/all - Delete ALL custom categories (MUST be before /:id)
+router.delete('/all', deleteAllCategories);
+
+// DELETE /api/categories/:id - Delete single category
 router.delete('/:id', deleteCategory);
 
 module.exports = router;

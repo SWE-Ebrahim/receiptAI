@@ -3,7 +3,6 @@ import {
   SourceSelector,
   CameraCapture,
   ImageUploader,
-  PDFUploader,
   ScanningOverlay,
   ProcessingStatus,
   ValidationErrors,
@@ -19,14 +18,13 @@ import ToastContainer from '../Common/ToastContainer';
  * AI-powered receipt scanning interface with:
  * - Camera capture with live preview
  * - Image upload (drag-drop or browse)
- * - PDF upload and processing
  * - Tesseract.js OCR (100% free, no API key)
  * - Editable data extraction form
  * - Smart categorization
  */
 const ScanView = () => {
   const { toasts, success, error: showError, removeToast } = useToast();
-  const [scanSource, setScanSource] = useState<'camera' | 'image' | 'pdf'>('image');
+  const [scanSource, setScanSource] = useState<'camera' | 'image'>('image');
   const [scanState, setScanState] = useState<'idle' | 'processing' | 'review' | 'complete'>('idle');
   const [extractedData, setExtractedData] = useState<ReceiptExtractionData | null>(null);
   const [validationErrors, setValidationErrors] = useState<ValidationError[]>([]);
@@ -77,17 +75,6 @@ const ScanView = () => {
     reader.readAsDataURL(file);
     
     await processReceipt(file);
-  };
-
-  const handlePDFUpload = async (_file: File) => {
-    try {
-      // Show informative message about PDF limitation
-      showError('For best results, convert PDF to image first and use Image Upload option');
-      handleRetake();
-    } catch (error) {
-      console.error('PDF upload error:', error);
-      showError('Failed to process PDF');
-    }
   };
 
   const processReceipt = async (file: File) => {
@@ -234,11 +221,6 @@ const ScanView = () => {
             <ImageUploader onUpload={handleImageUpload} />
           )}
 
-          {/* PDF Upload Mode */}
-          {scanSource === 'pdf' && scanState === 'idle' && (
-            <PDFUploader onUpload={handlePDFUpload} />
-          )}
-
           {/* Processing State */}
           {scanState === 'processing' && (
             <div className="absolute inset-0 flex items-center justify-center p-8 bg-surface-container-low">
@@ -246,7 +228,7 @@ const ScanView = () => {
             </div>
           )}
 
-          {/* Review State - Show preview */}
+          {/* Review State */}
           {scanState === 'review' && previewImage && (
             <div className="absolute inset-0 bg-black">
               <img
@@ -265,17 +247,6 @@ const ScanView = () => {
                   </div>
                 </div>
               </div>
-            </div>
-          )}
-
-          {/* Review State - No preview (PDF) */}
-          {scanState === 'review' && !previewImage && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center p-8 bg-gradient-to-br from-primary/10 to-secondary/10">
-              <span className="material-symbols-outlined text-7xl text-success mb-4">check_circle</span>
-              <p className="text-on-surface text-xl font-semibold">Processing Complete!</p>
-              <p className="text-on-surface-variant text-sm mt-2 text-center max-w-xs">
-                Your receipt has been analyzed. Review the extracted data below.
-              </p>
             </div>
           )}
         </section>

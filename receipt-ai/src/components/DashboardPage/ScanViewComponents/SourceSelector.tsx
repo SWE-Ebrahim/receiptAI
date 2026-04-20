@@ -1,15 +1,14 @@
 import React from 'react';
 
 interface SourceSelectorProps {
-  source: 'camera' | 'image' | 'pdf';
-  onSourceChange: (source: 'camera' | 'image' | 'pdf') => void;
+  source: 'camera' | 'image';
+  onSourceChange: (source: 'camera' | 'image') => void;
 }
 
 const SourceSelector: React.FC<SourceSelectorProps> = ({ source, onSourceChange }) => {
   const sources = [
     { id: 'camera', icon: 'photo_camera', label: 'Camera' },
     { id: 'image', icon: 'image', label: 'Image' },
-    { id: 'pdf', icon: 'picture_as_pdf', label: 'PDF' },
   ] as const;
 
   return (

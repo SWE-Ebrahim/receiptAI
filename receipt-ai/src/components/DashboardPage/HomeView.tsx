@@ -45,7 +45,13 @@ const HomeView = ({ onNavigateToSettings, onNavigateToScan, onNavigateToHistory,
         console.log('🔍 Email:', user.email);
         
         // Use username from signup (priority order: username -> display_name -> name -> email username)
-        const displayName = user.username || user.display_name || user.name || user.email?.split('@')[0] || 'User';
+        let displayName = user.username || user.display_name || user.name || user.email?.split('@')[0] || 'User';
+        
+        // Extract only the first word (username) if it contains spaces
+        if (displayName && displayName.includes(' ')) {
+          displayName = displayName.split(' ')[0];
+        }
+        
         console.log('✅ Final display name:', displayName);
         setUserName(displayName);
       }

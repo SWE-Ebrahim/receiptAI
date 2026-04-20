@@ -27,7 +27,7 @@ RESTful API server for receiptAI - Smart Expense Tracker application. Handles au
 
 ### Day 3: Complete API Implementation (April 17, 2026)
 - ✅ Receipt Management: Full CRUD endpoints (create, read, update, delete)
-- ✅ OCR Scanning: Multi-engine integration (Tesseract.js + ocr.space + Google Vision)
+- ✅ OCR Scanning: Client-side Tesseract.js with server-side ocr.space fallback
 - ✅ Category Management: Complete CRUD API with user-specific data
 - ✅ Spending Analytics: Summary endpoints with date filtering
 - ✅ Transaction History: Paginated receipt lists with filters

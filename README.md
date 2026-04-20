@@ -36,7 +36,7 @@ receiptAI automates everything:
 
 ### 1. **Smart Receipt Scanning**
 - Take photos with your mobile camera
-- Upload existing images or PDFs
+- Upload existing receipt images
 - AI extracts all details automatically (merchant, date, total, items)
 - Edit any extracted data if needed
 - Works offline - scans now, syncs later
@@ -103,14 +103,14 @@ receiptAI uses a **secure OTP-based authentication system** to protect your data
 ### Built With Free Tools
 - **Frontend**: React + Vite (fast, modern web framework)
 - **Database**: PostgreSQL via Supabase (free tier)
-- **AI/OCR**: Tesseract.js (100% free, unlimited usage)
+- **AI/OCR**: Tesseract.js (free, open-source OCR)
 - **PDF Generation**: jsPDF (client-side PDF creation)
 - **Charts**: Recharts (beautiful data visualizations)
 - **Storage**: Supabase Storage (for receipts and PDFs)
 - **Authentication**: Supabase Auth (secure login)
 - **Hosting**: Vercel/Netlify (free deployment)
 
-**Total Cost: $0** - All tools have generous free tiers perfect for personal use.
+**Cost-Effective** - All tools have generous free tiers perfect for personal use.
 
 ---
 
@@ -120,7 +120,7 @@ receiptAI uses a **secure OTP-based authentication system** to protect your data
 ```
 1. Sign Up → Create your free account
 2. Create Categories → Set up your expense types (Food, Transport, etc.)
-3. Scan Receipt → Take photo or upload image/PDF
+3. Scan Receipt → Take photo or upload image
 4. Review → AI shows extracted data, you confirm/edit
 5. Save → PDF generated, everything stored securely
 6. Analyze → View spending reports and insights
@@ -135,7 +135,7 @@ Your home screen with 3 simple buttons:
 - 🏷️ **Categories** - Manage your categories
 
 #### **Scan Receipt Screen**
-1. Choose: Camera / Upload Image / Upload PDF
+1. Choose: Camera / Upload Image
 2. Capture or select your receipt
 3. Wait for AI to read it (few seconds)
 4. Select category from your list
@@ -213,10 +213,27 @@ A: Yes! Scan receipts offline, they'll sync when you're back online.
 A: Absolutely. All data is encrypted, and only you can access your receipts.
 
 **Q: What receipt formats are supported?**  
-A: Photos (JPG, PNG) and PDFs. Works with printed and handwritten receipts (printed works better).
+A: Photos (JPG, PNG). Works with printed and handwritten receipts (printed works better).
 
 **Q: Can I export my data?**  
 A: Yes! Download individual PDF reports. CSV export coming soon.
+
+---
+
+## 📸 Screenshots
+
+<div align="center">
+  <table>
+    <tr>
+      <td><img src="screenshots/image.png" width="300" alt="Dashboard"/></td>
+      <td><img src="screenshots/image2.png" width="300" alt="Receipt Scanning"/></td>
+    </tr>
+    <tr>
+      <td><img src="screenshots/image3.png" width="300" alt="Transaction History"/></td>
+      <td><img src="screenshots/image4.png" width="300" alt="Analytics"/></td>
+    </tr>
+  </table>
+</div>
 
 ---
 
@@ -233,7 +250,9 @@ Software Engineer specializing in full-stack development
 
 ## 📄 License
 
-This project is built for personal and educational use. All technologies used are open-source with their respective licenses.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+All technologies used are open-source with their respective licenses.
 
 ---
 
@@ -246,7 +265,7 @@ receiptAI will be successful when:
 - ✅ Beautiful PDF reports ready to share
 - ✅ Clear insights into spending patterns
 - ✅ Works flawlessly on mobile devices
-- ✅ Completely free to use
+- ✅ Free to use with open-source tools
 - ✅ Your data stays private and secure
 
 ---
@@ -278,7 +297,8 @@ receiptAI/
 ### 📖 Documentation
 - **[Backend README](backend/README.md)** - API endpoints, authentication, deployment
 - **[Frontend README](receipt-ai/README.md)** - UI components, styling, build process
-- **[Security Audit](backend/SECURITY_AUDIT.md)** - Security review (internal use)
+- **[Security Policy](SECURITY.md)** - Security guidelines and vulnerability reporting
+- **[Contributing Guide](CONTRIBUTING.md)** - How to contribute to this project
 
 ---
 
@@ -302,7 +322,7 @@ receiptAI/
 
 ### Day 3: Core System Implementation (April 17, 2026)
 - ✅ Receipt Management: Upload, scan, edit, delete endpoints
-- ✅ OCR Integration: Multi-engine scanning (Tesseract.js + ocr.space + Google Vision)
+- ✅ OCR Integration: Client-side scanning with Tesseract.js + server-side fallback (ocr.space)
 - ✅ Category Management: Full CRUD API with colors and icons
 - ✅ Dashboard Analytics: Spending summaries and category breakdowns
 - ✅ History View: Transaction list with date filtering
@@ -326,9 +346,9 @@ receiptAI/
 - ✅ Cache invalidation on data changes
 - ✅ Database load reduced by 50-80%
 
-### Day 5: Testing & Deployment Preparation (April 19, 2026 - Today)
-- ⏳ Comprehensive testing (in progress)
-- ⏳ Screenshot documentation (pending)
+### Day 5: Testing & Deployment Preparation (April 19 - 20, 2026)
+- ✅ Comprehensive testing completed
+- ✅ Screenshot documentation added
 - ⏳ Production deployment (pending)
 - ⏳ Live demo URL setup (pending)
 

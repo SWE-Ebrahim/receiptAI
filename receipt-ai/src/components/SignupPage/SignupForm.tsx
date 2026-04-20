@@ -33,6 +33,66 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
     setError('')
     setIsLoading(true)
 
+    // Email validation - STRICT: Only allow real email providers
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(email)) {
+      setError('Please enter a valid email address')
+      setIsLoading(false)
+      return
+    }
+
+    // Check for common email typos
+    const emailDomain = email.split('@')[1]?.toLowerCase()
+    const allowedDomains = [
+      'gmail.com', 'googlemail.com',
+      'outlook.com', 'hotmail.com', 'live.com', 'msn.com',
+      'yahoo.com', 'yahoo.co.uk', 'yahoo.ca', 'yahoo.in', 'yahoo.co.jp',
+      'icloud.com', 'me.com', 'mac.com',
+      'protonmail.com', 'proton.me', 'pm.me',
+      'aol.com',
+      'zoho.com',
+      'yandex.com', 'yandex.ru',
+      'mail.com',
+      'gmx.com', 'gmx.net', 'gmx.at', 'gmx.ch',
+    ]
+
+    const commonTypos: Record<string, string> = {
+      'gail.com': 'gmail.com',
+      'gamil.com': 'gmail.com',
+      'gmial.com': 'gmail.com',
+      'gnail.com': 'gmail.com',
+      'gmal.com': 'gmail.com',
+      'gmaill.com': 'gmail.com',
+      'gmai.com': 'gmail.com',
+      'coldmail.com': 'gmail.com',
+      'hotail.com': 'hotmail.com',
+      'hotmal.com': 'hotmail.com',
+      'hotmial.com': 'hotmail.com',
+      'hotmil.com': 'hotmail.com',
+      'outllok.com': 'outlook.com',
+      'outlok.com': 'outlook.com',
+      'outloo.com': 'outlook.com',
+      'outlook.co': 'outlook.com',
+      'yaho.com': 'yahoo.com',
+      'yhaoo.com': 'yahoo.com',
+      'yaoo.com': 'yahoo.com',
+      'ycpoo.com': 'yahoo.com',
+      'protonmal.com': 'protonmail.com',
+    }
+
+    if (commonTypos[emailDomain]) {
+      setError(`Did you mean ${emailDomain.includes('hotail') ? 'hotmail.com' : commonTypos[emailDomain]}? Please check your email for typos.`)
+      setIsLoading(false)
+      return
+    }
+
+    // STRICT: Only allow whitelisted domains
+    if (!allowedDomains.includes(emailDomain)) {
+      setError('Please use a valid email from: Gmail, Outlook, Hotmail, Yahoo, iCloud, ProtonMail, AOL, or Zoho.')
+      setIsLoading(false)
+      return
+    }
+
     // Client-side password validation
     const passwordErrors = []
     if (password.length < 8) {

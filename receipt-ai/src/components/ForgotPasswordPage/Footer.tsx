@@ -28,7 +28,7 @@ const Footer = () => {
           </a>
         </div>
         
-        <p className="text-xs text-on-surface-variant/40 font-medium">© 2024 receiptAI</p>
+        <p className="text-xs text-on-surface-variant/40 font-medium">© 2026 receiptAI</p>
       </div>
     </footer>
   )

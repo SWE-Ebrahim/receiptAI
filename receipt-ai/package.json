@@ -1,7 +1,8 @@
 {
-  "name": "receipt-ai",
+  "name": "receiptai-frontend",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "Modern React frontend for receiptAI - Smart Expense Tracker",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -9,6 +10,9 @@
     "lint": "eslint .",
     "preview": "vite preview"
   },
+  "keywords": ["receipt", "expense-tracker", "ocr", "react", "typescript"],
+  "author": "Ebrahim Al Mahbosh",
+  "license": "MIT",
   "dependencies": {
     "@tailwindcss/vite": "^4.2.2",
     "@types/pdfjs-dist": "^2.10.377",

@@ -16,9 +16,9 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({ onCapture }) => {
       console.log('🎥 Opening camera...');
       const mediaStream = await navigator.mediaDevices.getUserMedia({
         video: { 
-          facingMode: 'user', // Use front camera on laptop/desktop
-          width: { ideal: 1280 },
-          height: { ideal: 720 }
+          facingMode: 'environment', // Use back camera on mobile for better receipt capture
+          width: { ideal: 1920 }, // Higher resolution for better OCR
+          height: { ideal: 1080 }
         }
       });
       
@@ -154,11 +154,11 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({ onCapture }) => {
 
   return (
     <div className="absolute inset-0 bg-black flex flex-col z-10">
-      {/* Live Camera Feed */}
+      {/* Live Camera Feed - Full Screen */}
       <div className="flex-1 relative overflow-hidden">
-        {/* Camera indicator */}
-        <div className="absolute top-4 right-4 z-50 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-2 animate-pulse">
-          <div className="w-2 h-2 bg-white rounded-full"></div>
+        {/* Camera indicator - Small and minimal */}
+        <div className="absolute top-3 right-3 z-50 bg-red-500/90 text-white px-2 py-0.5 rounded-full text-xs font-bold flex items-center gap-1.5 animate-pulse">
+          <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
           LIVE
         </div>
         
@@ -168,7 +168,7 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({ onCapture }) => {
           playsInline
           muted
           className="w-full h-full object-cover absolute inset-0"
-          style={{ transform: 'scaleX(-1)', backgroundColor: '#000' }} // Mirror for front camera, black bg
+          style={{ backgroundColor: '#000' }}
           onCanPlay={() => console.log('🎥 Video can play!')}
           onPlaying={() => console.log('🎥 Video is playing!')}
           onError={(e) => console.error('❌ Video error:', e)}
@@ -177,56 +177,49 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({ onCapture }) => {
         {/* Hidden canvas for capture */}
         <canvas ref={canvasRef} className="hidden" />
 
-        {/* Scanning overlay with guides */}
-        <div className="absolute inset-0 flex items-center justify-center p-6 z-20 pointer-events-none">
-          <div className="relative w-full max-w-sm aspect-[3/4]">
-            {/* Corner brackets */}
-            <div className="absolute -top-1 -left-1 w-10 h-10 border-t-4 border-l-4 border-white rounded-tl-xl shadow-[0_0_10px_rgba(255,255,255,0.5)]"></div>
-            <div className="absolute -top-1 -right-1 w-10 h-10 border-t-4 border-r-4 border-white rounded-tr-xl shadow-[0_0_10px_rgba(255,255,255,0.5)]"></div>
-            <div className="absolute -bottom-1 -left-1 w-10 h-10 border-b-4 border-l-4 border-white rounded-bl-xl shadow-[0_0_10px_rgba(255,255,255,0.5)]"></div>
-            <div className="absolute -bottom-1 -right-1 w-10 h-10 border-b-4 border-r-4 border-white rounded-br-xl shadow-[0_0_10px_rgba(255,255,255,0.5)]"></div>
+        {/* Minimal scanning overlay */}
+        <div className="absolute inset-0 flex items-center justify-center p-4 z-20 pointer-events-none">
+          <div className="relative w-full max-w-md aspect-[3/4]">
+            {/* Simple corner brackets */}
+            <div className="absolute -top-0.5 -left-0.5 w-10 h-10 border-t-3 border-l-3 border-white rounded-tl-xl opacity-80"></div>
+            <div className="absolute -top-0.5 -right-0.5 w-10 h-10 border-t-3 border-r-3 border-white rounded-tr-xl opacity-80"></div>
+            <div className="absolute -bottom-0.5 -left-0.5 w-10 h-10 border-b-3 border-l-3 border-white rounded-bl-xl opacity-80"></div>
+            <div className="absolute -bottom-0.5 -right-0.5 w-10 h-10 border-b-3 border-r-3 border-white rounded-br-xl opacity-80"></div>
             
-            {/* Semi-transparent border */}
-            <div className="absolute inset-0 border-2 border-white/30 rounded-xl"></div>
+            {/* Subtle border */}
+            <div className="absolute inset-0 border border-white/20 rounded-xl"></div>
             
-            {/* Scanning line animation */}
-            <div className="absolute left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent shadow-[0_0_15px_rgba(96,165,250,0.8)] animate-[scan_2.5s_ease-in-out_infinite] z-30"></div>
-          </div>
-        </div>
-
-        {/* Receipt alignment hint */}
-        <div className="absolute top-4 left-4 right-16 z-20 pointer-events-none">
-          <div className="bg-black/70 backdrop-blur-sm rounded-xl px-4 py-2 border border-white/20">
-            <p className="text-white text-sm text-center font-medium">
-              📄 Align receipt within the frame
-            </p>
+            {/* Scanning line */}
+            <div className="absolute left-0 right-0 h-0.5 bg-white/50 shadow-[0_0_10px_rgba(255,255,255,0.5)] animate-[scan_2.5s_ease-in-out_infinite] z-30"></div>
           </div>
         </div>
       </div>
 
-      {/* Bottom Controls */}
-      <div className="bg-gradient-to-t from-black/90 via-black/60 to-transparent pt-12 pb-6 px-6 z-20">
-        {/* Capture Button - Large and Prominent */}
-        <button
-          onClick={capturePhoto}
-          className="w-full py-5 rounded-2xl bg-gradient-to-r from-primary to-primary/80 text-white font-bold text-lg shadow-[0_8px_32px_rgba(96,165,250,0.4)] hover:shadow-[0_12px_40px_rgba(96,165,250,0.5)] transition-all active:scale-[0.96] flex items-center justify-center gap-3 border border-white/20"
-        >
-          <span className="material-symbols-outlined text-2xl">camera</span>
-          Take Photo
-        </button>
+      {/* Minimal Bottom Controls */}
+      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent pt-12 pb-6 px-4 z-20">
+        {/* Compact Buttons Row */}
+        <div className="flex gap-3">
+          {/* Capture Button - Compact */}
+          <button
+            onClick={capturePhoto}
+            className="flex-1 py-3 rounded-xl bg-primary text-white font-semibold text-sm shadow-lg hover:shadow-xl transition-all active:scale-[0.97] flex items-center justify-center gap-2"
+          >
+            <span className="material-symbols-outlined text-xl">camera_alt</span>
+            Capture
+          </button>
 
-        {/* Close Camera Button */}
-        <button
-          onClick={() => {
-            stopCamera();
-            // Notify parent to go back to source selection
-            onCapture(new File([], '')); // Empty file signals cancel
-          }}
-          className="w-full mt-3 py-3 rounded-xl bg-white/10 text-white/80 font-medium hover:bg-white/20 transition-all flex items-center justify-center gap-2"
-        >
-          <span className="material-symbols-outlined">close</span>
-          Cancel
-        </button>
+          {/* Cancel Button - Compact */}
+          <button
+            onClick={() => {
+              stopCamera();
+              onCapture(new File([], ''));
+            }}
+            className="flex-1 py-3 rounded-xl bg-white/20 text-white font-semibold text-sm hover:bg-white/30 transition-all flex items-center justify-center gap-2 backdrop-blur-sm"
+          >
+            <span className="material-symbols-outlined text-xl">close</span>
+            Cancel
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -25,7 +25,7 @@ interface UserData {
 }
 
 const SettingsView = () => {
-  const { toasts, error, removeToast } = useToast();
+  const { toasts, success, error, info, warning, removeToast } = useToast();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
   const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false);
@@ -245,7 +245,7 @@ const SettingsView = () => {
             Log Out
           </button>
           <p className="text-center text-xs text-on-surface/40 mt-4">
-            © 2024 ReceiptAI. All rights reserved.
+            © 2026 ReceiptAI. All rights reserved.
           </p>
         </section>
       </div>
@@ -274,6 +274,12 @@ const SettingsView = () => {
         isOpen={isDeleteAllDataModalOpen}
         onClose={() => setIsDeleteAllDataModalOpen(false)}
         onSuccess={loadUserData}
+        showToast={(message, type) => {
+          if (type === 'success') success(message);
+          else if (type === 'error') error(message);
+          else if (type === 'info') info(message);
+          else warning(message);
+        }}
       />
 
       {/* Toast Notifications */}
