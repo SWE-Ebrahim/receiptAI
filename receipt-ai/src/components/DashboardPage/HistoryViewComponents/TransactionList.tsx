@@ -11,6 +11,9 @@
 import { useState, useEffect } from 'react';
 import { generateReceiptPDF, updateReceipt, deleteReceipt } from '../../../services/receiptsApi';
 
+// API Base URL
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+
 interface Transaction {
   id: string;
   merchant_name: string;
@@ -97,7 +100,7 @@ const TransactionList = ({ transactions, loading }: TransactionListProps) => {
       const token = localStorage.getItem('authToken');
       if (!token) return;
 
-      const response = await fetch('http://localhost:5000/api/scan/categories', {
+      const response = await fetch(`${API_BASE}/scan/categories`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },

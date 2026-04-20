@@ -6,6 +6,9 @@
 import { useState } from 'react';
 import useToast from '../../../hooks/useToast';
 
+// API Base URL
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+
 interface EditProfileModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -70,7 +73,7 @@ const EditProfileModal = ({ isOpen, onClose, onSuccess }: EditProfileModalProps)
         return;
       }
 
-      const response = await fetch('http://localhost:5000/api/auth/profile', {
+      const response = await fetch(`${API_BASE}/auth/profile`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -135,7 +138,7 @@ const EditProfileModal = ({ isOpen, onClose, onSuccess }: EditProfileModalProps)
     const email = getUserEmail();
     
     try {
-      const response = await fetch('http://localhost:5000/api/auth/forgot-password', {
+      const response = await fetch(`${API_BASE}/auth/forgot-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
@@ -174,7 +177,7 @@ const EditProfileModal = ({ isOpen, onClose, onSuccess }: EditProfileModalProps)
     
     try {
       // Step 1: Verify OTP
-      const verifyResponse = await fetch('http://localhost:5000/api/auth/verify-reset-otp', {
+      const verifyResponse = await fetch(`${API_BASE}/auth/verify-reset-otp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, otp: otpCode }),
@@ -187,7 +190,7 @@ const EditProfileModal = ({ isOpen, onClose, onSuccess }: EditProfileModalProps)
       }
 
       // Step 2: Change password
-      const changeResponse = await fetch('http://localhost:5000/api/auth/reset-password', {
+      const changeResponse = await fetch(`${API_BASE}/auth/reset-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, newPassword }),

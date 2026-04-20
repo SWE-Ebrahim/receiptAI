@@ -8,6 +8,9 @@
  */
 
 import { apiGet, apiPost } from "../services/api";
+
+// API Base URL for direct fetch calls
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 import html2pdf from "html2pdf.js";
 
 export interface WeeklySpendingData {
@@ -166,7 +169,7 @@ export const updateReceipt = async (
       throw new Error("Authentication required");
     }
 
-    const response = await fetch(`http://localhost:5000/api/receipts/${id}`, {
+    const response = await fetch(`${API_BASE}/receipts/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -203,7 +206,7 @@ export const deleteReceipt = async (id: string) => {
       throw new Error("Authentication required");
     }
 
-    const response = await fetch(`http://localhost:5000/api/receipts/${id}`, {
+    const response = await fetch(`${API_BASE}/receipts/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,

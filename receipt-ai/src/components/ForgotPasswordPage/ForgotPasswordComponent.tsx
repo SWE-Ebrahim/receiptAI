@@ -18,6 +18,9 @@ import Header from './Header'
 import Footer from './Footer'
 import ForgotPasswordForm from './ForgotPasswordForm'
 
+// API Base URL
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+
 const ForgotPasswordComponent = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
@@ -33,7 +36,7 @@ const ForgotPasswordComponent = () => {
     setIsLoading(true)
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/forgot-password', {
+      const response = await fetch(`${API_BASE}/auth/forgot-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: emailValue }),
@@ -63,7 +66,7 @@ const ForgotPasswordComponent = () => {
     setIsLoading(true)
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/verify-reset-otp', {
+      const response = await fetch(`${API_BASE}/auth/verify-reset-otp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, otp: otpCode }),
@@ -97,7 +100,7 @@ const ForgotPasswordComponent = () => {
     setIsLoading(true)
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/reset-password', {
+      const response = await fetch(`${API_BASE}/auth/reset-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, newPassword }),

@@ -8,6 +8,9 @@ import useToast from '../../../hooks/useToast';
 import { scanApi } from '../../../services/scanApi';
 import { generateReceiptPDF } from '../../../services/receiptsApi';
 
+// API Base URL
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+
 interface DeleteAllDataModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -515,7 +518,7 @@ const DeleteAllDataModal = ({ isOpen, onClose, onSuccess, showToast }: DeleteAll
 
       // Step 3: Delete all custom categories
       console.log('🗑️ Deleting all custom categories...');
-      const response = await fetch('http://localhost:5000/api/categories/all', {
+      const response = await fetch(`${API_BASE}/categories/all`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,

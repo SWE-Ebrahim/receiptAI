@@ -15,6 +15,9 @@ import Header from './Header'
 import LoginForm from './LoginForm'
 import Footer from './Footer'
 
+// API Base URL
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+
 const LoginComponent = () => {
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(false)
@@ -70,7 +73,7 @@ const LoginComponent = () => {
     setIsLoading(true)
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/login', {
+      const response = await fetch(`${API_BASE}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
