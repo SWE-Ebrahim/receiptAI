@@ -148,13 +148,17 @@ const signup = async (req, res) => {
         .eq('email', email);
     }
 
-    // Check if user already exists and is verified
-    // Use listUsers with email filter (Supabase Admin API limitation)
-    const { data: usersList, error: userError } = await supabaseAdmin.auth.admin.listUsers();
+    // Check if user already exists (optimized - no listUsers)
+    // Try to sign in with dummy password to check if user exists
+    const { data: signInCheck, error: signInError } = await supabase.auth.signInWithPassword({
+      email: email,
+      password: 'dummy_password_check_only'
+    });
     
-    const existingUser = usersList?.users?.find(u => u.email === email);
+    // If no error or error is NOT "Invalid login credentials", user exists
+    const userExists = !signInError || signInError.message !== 'Invalid login credentials';
     
-    if (!userError && existingUser && existingUser.email_confirmed_at) {
+    if (userExists && !signInError) {
       return res.status(400).json({
         success: false,
         message: "User with this email already exists and is verified. Please login.",

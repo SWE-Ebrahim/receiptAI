@@ -21,7 +21,8 @@ const FALLBACK_THRESHOLD = 60; // rawConfidence below this triggers server fallb
 
 export interface ReceiptExtractionData {
   merchant: string;
-  date: string;
+  date: string; // Receipt date (YYYY-MM-DD)
+  time?: string; // Receipt time (HH:mm) - optional
   amount: number;
   detectedCurrency?: string; // Currency detected from OCR (e.g., 'USD', 'EUR')
   tax?: number | null;
@@ -37,6 +38,8 @@ export interface ReceiptExtractionData {
   rawConfidence?: number;
   warnings?: ValidationError[];
   source?: 'tesseract' | 'server'; // which OCR produced this result
+  generatedDate?: string; // When receipt was scanned (auto-set)
+  generatedTime?: string; // When receipt was scanned (auto-set)
 }
 
 export interface ValidationError {

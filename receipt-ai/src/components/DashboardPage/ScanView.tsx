@@ -92,7 +92,20 @@ const ScanView = () => {
         const data = await scanApi.uploadImage(file);
         
         setProcessingStep('Extracting data...');
-        setExtractedData(data);
+        
+        // Auto-populate generated date/time (when user scanned the receipt)
+        const now = new Date();
+        const generatedDate = now.toISOString().split('T')[0]; // YYYY-MM-DD
+        const generatedTime = now.toTimeString().slice(0, 5); // HH:mm
+        
+        // Add generated timestamp to extracted data
+        const dataWithTimestamp = {
+          ...data,
+          generatedDate,
+          generatedTime
+        };
+        
+        setExtractedData(dataWithTimestamp);
 
         // Set warnings from OCR
         if (data.warnings) {

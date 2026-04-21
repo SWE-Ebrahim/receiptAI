@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
+const compression = require('compression');
 const morgan = require('morgan');
 const { testConnection } = require('./config/supabase');
 const { scheduleCleanup } = require('./utils/fileCleanup');
@@ -13,6 +14,9 @@ const PORT = process.env.PORT || 5000;
 // ============================================
 // MIDDLEWARE
 // ============================================
+
+// Response compression (reduce payload size by 60-80%)
+app.use(compression());
 
 // Security headers
 app.use(helmet());

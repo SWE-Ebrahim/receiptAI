@@ -15,30 +15,43 @@ exports.getCategories = async (req, res) => {
 
     console.log('📂 Fetching categories for user:', userId);
 
-    // OPTIMIZED: Single query with LEFT JOIN and COUNT
-    // Replaces N+1 queries with a single aggregated query
-    const { data: categoriesWithCounts, error } = await supabase
+    // OPTIMIZED: Get categories first
+    const { data: categories, error: catError } = await supabase
       .from('categories')
-      .select(`
-        *,
-        receipts (count)
-      `)
+      .select('*')
       .eq('user_id', userId)
       .order('name', { ascending: true });
 
-    if (error) {
-      console.error('❌ Error fetching categories:', error);
+    if (catError) {
+      console.error('❌ Error fetching categories:', catError);
       return res.status(500).json({
         success: false,
         message: 'Failed to fetch categories',
-        error: error.message
+        error: catError.message
       });
     }
 
-    // Transform the nested count into receipt_count field
-    const formattedCategories = categoriesWithCounts?.map(cat => ({
+    // OPTIMIZED: Get receipt counts in a single query using GROUP BY
+    const { data: receiptCounts, error: countError } = await supabase
+      .from('receipts')
+      .select('category_id')
+      .eq('user_id', userId)
+      .in('category_id', categories?.map(c => c.id) || []);
+
+    if (countError) {
+      console.error('⚠️ Error fetching receipt counts:', countError);
+    }
+
+    // Count receipts per category
+    const countMap = {};
+    receiptCounts?.forEach(r => {
+      countMap[r.category_id] = (countMap[r.category_id] || 0) + 1;
+    });
+
+    // Merge categories with counts
+    const formattedCategories = categories?.map(cat => ({
       ...cat,
-      receipt_count: cat.receipts?.[0]?.count || 0
+      receipt_count: countMap[cat.id] || 0
     })) || [];
 
     console.log(`✅ Found ${formattedCategories.length} categories`);

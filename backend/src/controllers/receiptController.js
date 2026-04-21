@@ -20,12 +20,20 @@ const cache = require('../utils/cache');
 exports.getUserReceipts = async (req, res) => {
   try {
     const userId = req.user.id;
+    const { limit = 50, offset = 0 } = req.query; // Pagination support
 
-    // Query receipts from Supabase
+    // OPTIMIZED: Select only needed columns, add pagination
     const { data: receipts, error } = await supabase
       .from('receipts')
       .select(`
-        *,
+        id,
+        merchant_name,
+        receipt_date,
+        total_amount,
+        category_id,
+        created_at,
+        original_file_url,
+        file_type,
         categories (
           id,
           name,
@@ -34,7 +42,8 @@ exports.getUserReceipts = async (req, res) => {
         )
       `)
       .eq('user_id', userId)
-      .order('created_at', { ascending: false });
+      .order('created_at', { ascending: false })
+      .range(offset, offset + limit - 1); // Add pagination
 
     if (error) {
       console.error('Error fetching receipts:', error);
@@ -409,6 +418,7 @@ exports.getReceiptHistory = async (req, res) => {
         merchant_name,
         total_amount,
         receipt_date,
+        receipt_time,
         category_id,
         status,
         created_at,
@@ -421,7 +431,7 @@ exports.getReceiptHistory = async (req, res) => {
         )
       `)
       .eq('user_id', userId)
-      .order('receipt_date', { ascending: false });
+      .order('created_at', { ascending: false });
 
     if (startDate) {
       query = query.gte('receipt_date', startDate.toISOString().split('T')[0]);
@@ -590,8 +600,9 @@ exports.getRecentActivity = async (req, res) => {
       .select(`
         id,
         merchant_name,
-        total_amount,
         receipt_date,
+        receipt_time,
+        total_amount,
         created_at,
         categories (
           id,
@@ -613,16 +624,22 @@ exports.getRecentActivity = async (req, res) => {
     }
 
     // Format the response
-    const formattedReceipts = receipts.map(receipt => ({
-      id: receipt.id,
-      merchant: receipt.merchant_name || 'Unknown Merchant',
-      amount: receipt.total_amount || 0,
-      currency: 'AED',
-      date: receipt.receipt_date || receipt.created_at,
-      category: receipt.categories?.name || 'Uncategorized',
-      categoryIcon: receipt.categories?.icon || 'receipt',
-      categoryColor: receipt.categories?.color || 'bg-gray-500'
-    }));
+    const formattedReceipts = receipts.map(receipt => {
+      // Use created_at (scan time) for display if receipt_date is just a date string
+      const displayDate = receipt.created_at || receipt.receipt_date;
+      
+      return {
+        id: receipt.id,
+        merchant: receipt.merchant_name || 'Unknown Merchant',
+        amount: receipt.total_amount || 0,
+        currency: 'AED',
+        date: displayDate, // Use full timestamp for proper "Today" detection
+        receipt_time: receipt.receipt_time || null, // Include receipt time
+        category: receipt.categories?.name || 'Uncategorized',
+        categoryIcon: receipt.categories?.icon || 'receipt',
+        categoryColor: receipt.categories?.color || 'bg-gray-500'
+      };
+    });
 
     res.json({
       success: true,
@@ -791,7 +808,7 @@ exports.updateReceipt = async (req, res) => {
   try {
     const userId = req.user.id;
     const { id } = req.params;
-    const { merchant_name, receipt_date, total_amount, category_id, notes } = req.body;
+    const { merchant_name, receipt_date, receipt_time, total_amount, category_id, notes } = req.body;
 
     console.log(`✏️ Updating receipt ${id} for user ${userId}`);
 
@@ -820,6 +837,7 @@ exports.updateReceipt = async (req, res) => {
     const updateData = {};
     if (merchant_name !== undefined) updateData.merchant_name = merchant_name;
     if (receipt_date !== undefined) updateData.receipt_date = receipt_date;
+    if (receipt_time !== undefined) updateData.receipt_time = receipt_time;
     if (total_amount !== undefined) updateData.total_amount = total_amount;
     if (category_id !== undefined) updateData.category_id = category_id;
     if (notes !== undefined) updateData.notes = notes;

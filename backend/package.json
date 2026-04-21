@@ -9,13 +9,20 @@
     "check-env": "node check-env.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["receipt", "expense-tracker", "ocr", "ai", "scanning"],
+  "keywords": [
+    "receipt",
+    "expense-tracker",
+    "ocr",
+    "ai",
+    "scanning"
+  ],
   "author": "Ebrahim Al Mahbosh",
   "license": "MIT",
   "type": "commonjs",
   "dependencies": {
     "@google-cloud/vision": "^5.3.5",
     "@supabase/supabase-js": "^2.103.0",
+    "compression": "^1.8.1",
     "cors": "^2.8.6",
     "date-fns": "^4.1.0",
     "dotenv": "^17.4.2",

@@ -18,6 +18,8 @@ interface Transaction {
   id: string;
   merchant_name: string;
   receipt_date: string;
+  receipt_time?: string | null; // Added for receipt time
+  created_at?: string; // Added for accurate date comparison
   total_amount: number;
   category?: string | null;
   category_id?: string | null;
@@ -56,17 +58,23 @@ const formatCurrency = (amount: number) => {
   return `AED ${amount.toFixed(2)}`;
 };
 
-const formatDate = (dateStr: string) => {
-  // Parse as local date (YYYY-MM-DD format from database)
-  const [year, month, day] = dateStr.split('-').map(Number);
-  const date = new Date(year, month - 1, day);
+const formatDate = (dateStr: string, createdAt?: string) => {
+  // Use created_at (full timestamp) for accurate day comparison, fallback to receipt_date
+  const dateToUse = createdAt || dateStr;
+  const date = new Date(dateToUse);
   const now = new Date();
-  const diffTime = Math.abs(now.getTime() - date.getTime());
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  
+  // Reset both to midnight for accurate day comparison
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const receiptDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  
+  // Calculate difference in days (positive = past, negative = future)
+  const diffMs = today.getTime() - receiptDate.getTime();
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
   
   if (diffDays === 0) return 'Today';
   if (diffDays === 1) return 'Yesterday';
-  if (diffDays < 7) return `${diffDays} days ago`;
+  if (diffDays > 1 && diffDays < 7) return `${diffDays} days ago`;
   
   return date.toLocaleDateString('en-US', {
     month: 'short',
@@ -85,6 +93,7 @@ const TransactionList = ({ transactions, loading }: TransactionListProps) => {
   const [editForm, setEditForm] = useState({
     merchant_name: '',
     receipt_date: '',
+    receipt_time: '', // Added receipt time
     total_amount: 0,
     category_id: '',
   });
@@ -124,6 +133,7 @@ const TransactionList = ({ transactions, loading }: TransactionListProps) => {
     setEditForm({
       merchant_name: tx.merchant_name,
       receipt_date: tx.receipt_date.split('T')[0], // Format for date input
+      receipt_time: tx.receipt_time || '', // Format for time input
       total_amount: tx.total_amount,
       category_id: tx.category_id || '',
     });
@@ -222,7 +232,7 @@ const TransactionList = ({ transactions, loading }: TransactionListProps) => {
               </div>
               <div>
                 <h4 className="font-medium text-on-surface">{tx.merchant_name || 'Unknown Merchant'}</h4>
-                <p className="text-xs text-on-surface/60 mt-0.5">{formatDate(tx.receipt_date)}</p>
+                <p className="text-xs text-on-surface/60 mt-0.5">{formatDate(tx.receipt_date, tx.created_at)}</p>
               </div>
             </div>
             <div className="text-right">
@@ -325,7 +335,22 @@ const TransactionList = ({ transactions, loading }: TransactionListProps) => {
                     month: 'long',
                     day: 'numeric'
                   })}
+                  {viewingReceipt.receipt_time && ` • ${viewingReceipt.receipt_time}`}
                 </p>
+                {viewingReceipt.created_at && (
+                  <p className="text-xs text-on-surface-variant/50 mt-1">
+                    Generated {new Date(viewingReceipt.created_at).toLocaleDateString('en-US', {
+                      month: 'short',
+                      day: 'numeric',
+                      year: 'numeric'
+                    })} • {new Date(viewingReceipt.created_at).toLocaleTimeString('en-US', {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      second: '2-digit',
+                      hour12: false
+                    })}
+                  </p>
+                )}
               </div>
               <button
                 onClick={() => setViewingReceipt(null)}
@@ -411,15 +436,53 @@ const TransactionList = ({ transactions, loading }: TransactionListProps) => {
                 />
               </div>
 
-              {/* Date */}
-              <div>
-                <label className="block text-sm font-medium text-on-surface/70 mb-2">Date</label>
-                <input
-                  type="date"
-                  value={editForm.receipt_date}
-                  onChange={(e) => setEditForm({ ...editForm, receipt_date: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl bg-surface-container-low border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all"
-                />
+              {/* Date and Time - 2 column layout */}
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-sm font-medium text-on-surface/70 mb-2">Receipt Date</label>
+                  <input
+                    type="date"
+                    value={editForm.receipt_date}
+                    onChange={(e) => setEditForm({ ...editForm, receipt_date: e.target.value })}
+                    className="w-full px-4 py-3 rounded-xl bg-surface-container-low border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-on-surface/70 mb-2">Receipt Time</label>
+                  <input
+                    type="time"
+                    value={editForm.receipt_time}
+                    onChange={(e) => setEditForm({ ...editForm, receipt_time: e.target.value })}
+                    className="w-full px-4 py-3 rounded-xl bg-surface-container-low border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                    placeholder="Optional"
+                  />
+                </div>
+              </div>
+
+              {/* Generated Date & Time (Read-only, auto-filled) */}
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-sm font-medium text-on-surface/70 mb-2">
+                    Generated Date <span className="text-xs text-on-surface/40">(Auto)</span>
+                  </label>
+                  <input
+                    type="date"
+                    value={editingReceipt?.created_at ? editingReceipt.created_at.split('T')[0] : ''}
+                    readOnly
+                    className="w-full px-4 py-3 rounded-xl bg-surface-container-low border border-outline-variant/50 cursor-not-allowed text-on-surface/40"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-on-surface/70 mb-2">
+                    Generated Time <span className="text-xs text-on-surface/40">(Auto)</span>
+                  </label>
+                  <input
+                    type="time"
+                    value={editingReceipt?.created_at ? editingReceipt.created_at.split('T')[1]?.slice(0, 5) || '' : ''}
+                    readOnly
+                    className="w-full px-4 py-3 rounded-xl bg-surface-container-low border border-outline-variant/50 cursor-not-allowed text-on-surface/40"
+                  />
+                </div>
               </div>
 
               {/* Amount */}

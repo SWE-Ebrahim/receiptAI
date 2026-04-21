@@ -8,6 +8,7 @@
  */
 
 import { apiGet, apiPost } from "../services/api";
+import { requestCache } from "../utils/requestCache";
 
 // API Base URL for direct fetch calls
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
@@ -27,6 +28,7 @@ export interface RecentActivityItem {
   amount: number;
   currency: string;
   date: string;
+  receipt_time?: string | null; // Added for receipt time display
   category: string;
   categoryIcon: string;
   categoryColor: string;
@@ -48,11 +50,22 @@ export const getSpendingSummary = async (
       url += `&startDate=${startDate}&endDate=${endDate}`;
     }
 
+    // Check cache first
+    const cacheKey = `spending:${duration}:${startDate || ''}:${endDate || ''}`;
+    const cached = requestCache.get<WeeklySpendingData>(cacheKey);
+    if (cached) {
+      console.log('💾 Cache hit: spending summary');
+      return cached;
+    }
+
     const response = await apiGet(url);
 
     if (!response.success) {
       throw new Error(response.message || "Failed to fetch spending summary");
     }
+
+    // Cache the result
+    requestCache.set(cacheKey, response.data, requestCache.shortTTL());
 
     return response.data;
   } catch (error) {
@@ -111,11 +124,22 @@ export const getCategoryBreakdown = async (duration: string): Promise<any> => {
  */
 export const getRecentActivity = async (): Promise<RecentActivityItem[]> => {
   try {
+    // Check cache first
+    const cacheKey = 'recent_activity';
+    const cached = requestCache.get<RecentActivityItem[]>(cacheKey);
+    if (cached) {
+      console.log('💾 Cache hit: recent activity');
+      return cached;
+    }
+
     const response = await apiGet("/receipts/recent-activity");
 
     if (!response.success) {
       throw new Error(response.message || "Failed to fetch recent activity");
     }
+
+    // Cache for 2 minutes
+    requestCache.set(cacheKey, response.data, 2 * 60 * 1000);
 
     return response.data;
   } catch (error) {
@@ -158,6 +182,7 @@ export const updateReceipt = async (
   data: {
     merchant_name?: string;
     receipt_date?: string;
+    receipt_time?: string; // Added support for receipt time
     total_amount?: number;
     category_id?: string;
     notes?: string;
@@ -1177,8 +1202,15 @@ export const generateReceiptPDF = (receipt:any) => {
   const d = new Date(receipt.receipt_date || Date.now());
   const g = new Date(receipt.created_at || Date.now());
 
+  // Format receipt date (transaction date)
   const formattedDate = dateFmt.format(d);
-  const formattedTime = timeFmt.format(d);
+  
+  // Format receipt time - use receipt_time if available, fallback to created_at time
+  const formattedTime = receipt.receipt_time 
+    ? receipt.receipt_time.substring(0, 5) // HH:mm format
+    : timeFmt.format(g);
+  
+  // Format generated date & time (when receipt was scanned)
   const genDate = dateFmt.format(g);
   const genTime = g.toLocaleTimeString("en-US", {
     hour: "2-digit",
@@ -1658,16 +1690,23 @@ export const generateReceiptPDF = (receipt:any) => {
             <div class="detail-row">
               <span class="detail-label">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                Date
+                Receipt Date
               </span>
               <span class="detail-value text">${formattedDate}</span>
             </div>
             <div class="detail-row">
               <span class="detail-label">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                Time
+                Receipt Time
               </span>
               <span class="detail-value text">${formattedTime}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                Generated
+              </span>
+              <span class="detail-value text">${genDate} · ${genTime}</span>
             </div>
             <div class="detail-row">
               <span class="detail-label">

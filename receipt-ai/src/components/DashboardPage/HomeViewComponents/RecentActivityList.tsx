@@ -18,12 +18,7 @@ const RecentActivityList = ({ onSeeAll }: RecentActivityProps) => {
 
   useEffect(() => {
     fetchRecentActivity();
-
-    // Real-time polling: refresh activity every 30 seconds
-    const pollInterval = setInterval(fetchRecentActivity, 30000);
-
-    // Cleanup interval on unmount
-    return () => clearInterval(pollInterval);
+    // Removed polling - data is now cached and refreshed on navigation
   }, []);
 
   const fetchRecentActivity = async () => {
@@ -40,16 +35,27 @@ const RecentActivityList = ({ onSeeAll }: RecentActivityProps) => {
     }
   };
 
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateString: string, receiptTime?: string | null) => {
     const date = new Date(dateString);
     const now = new Date();
-    const diffTime = Math.abs(now.getTime() - date.getTime());
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    // Reset both to midnight for accurate day comparison
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const receiptDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    
+    // Calculate difference in days (positive = past, negative = future)
+    const diffMs = today.getTime() - receiptDate.getTime();
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+    // Use receipt_time if available, otherwise use time from created_at
+    const displayTime = receiptTime || date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
 
     if (diffDays === 0) {
-      return `Today • ${date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}`;
+      return `Today • ${displayTime}`;
     } else if (diffDays === 1) {
-      return `Yesterday • ${date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}`;
+      return `Yesterday • ${displayTime}`;
+    } else if (diffDays > 1 && diffDays < 7) {
+      return `${diffDays} days ago`;
     } else {
       return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
     }
@@ -139,7 +145,7 @@ const RecentActivityList = ({ onSeeAll }: RecentActivityProps) => {
               </div>
               <div>
                 <h4 className="font-headline font-bold text-on-surface">{activity.merchant}</h4>
-                <p className="text-sm text-on-surface-variant/70 mt-0.5">{formatDate(activity.date)}</p>
+                <p className="text-sm text-on-surface-variant/70 mt-0.5">{formatDate(activity.date, activity.receipt_time)}</p>
               </div>
             </div>
             

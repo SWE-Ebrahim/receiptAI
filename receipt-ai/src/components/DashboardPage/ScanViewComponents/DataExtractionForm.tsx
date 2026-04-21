@@ -60,15 +60,25 @@ const DataExtractionForm: React.FC<DataExtractionFormProps> = ({
         </div>
       </div>
 
-      {/* Date and Amount */}
-      <div className="grid grid-cols-2 gap-3">
+      {/* Date, Time, and Amount */}
+      <div className="grid grid-cols-3 gap-3">
         <div>
-          <label className="block text-sm font-medium text-on-surface/70 mb-2">Date</label>
+          <label className="block text-sm font-medium text-on-surface/70 mb-2">Receipt Date</label>
           <input
             type="date"
             value={extractedData.date}
             onChange={(e) => handleChange('date', e.target.value)}
             className="w-full px-4 py-3 rounded-xl bg-surface-container-low border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-on-surface/70 mb-2">Receipt Time</label>
+          <input
+            type="time"
+            value={extractedData.time || ''}
+            onChange={(e) => handleChange('time', e.target.value)}
+            className="w-full px-4 py-3 rounded-xl bg-surface-container-low border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+            placeholder="Optional"
           />
         </div>
         <div>
@@ -90,6 +100,32 @@ const DataExtractionForm: React.FC<DataExtractionFormProps> = ({
               {getConfidenceIcon(extractedData.confidence.amount)}
             </span>
           </div>
+        </div>
+      </div>
+
+      {/* Generated Date & Time (Auto-filled, read-only) */}
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <label className="block text-sm font-medium text-on-surface/70 mb-2">
+            Generated Date <span className="text-xs text-on-surface-variant">(Auto)</span>
+          </label>
+          <input
+            type="date"
+            value={extractedData.generatedDate || ''}
+            readOnly
+            className="w-full px-4 py-3 rounded-xl bg-surface-container-low/50 border border-outline-variant/50 text-on-surface-variant cursor-not-allowed"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-on-surface/70 mb-2">
+            Generated Time <span className="text-xs text-on-surface-variant">(Auto)</span>
+          </label>
+          <input
+            type="time"
+            value={extractedData.generatedTime || ''}
+            readOnly
+            className="w-full px-4 py-3 rounded-xl bg-surface-container-low/50 border border-outline-variant/50 text-on-surface-variant cursor-not-allowed"
+          />
         </div>
       </div>
 
