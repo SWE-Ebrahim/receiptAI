@@ -1,118 +1,128 @@
 # receiptAI - Smart Expense Tracker
 
+> **Live Demo**: https://receipt-ai-xi.vercel.app  
+> **API**: https://receiptai-backend-rgf8.onrender.com  
+> **Status**: ✅ Production Ready | **Monitoring**: UptimeRobot 100% Uptime
+
 ## 🎯 What is receiptAI?
 
-**receiptAI** is a free, mobile-friendly web app that helps you track expenses by scanning receipts with your phone's camera. Instead of manually typing receipt details, the app uses AI to read them automatically, organizes your spending by category, and generates professional PDF reports.
+**receiptAI** is a production-ready, mobile-first web application that revolutionizes expense tracking through AI-powered receipt scanning. Simply photograph your receipt, and our intelligent system automatically extracts merchant details, transaction dates, amounts, and line items—eliminating manual data entry entirely.
 
-**Perfect for:**
-- Freelancers tracking business expenses
-- Employees submitting expense reports
-- Anyone who wants to understand their spending habits
-- Small business owners managing receipts
+**Ideal for:**
+- 💼 **Freelancers & Contractors** - Effortlessly track business expenses
+- 🏢 **Corporate Teams** - Streamline expense report submissions
+- 📊 **Financial Consciousness** - Gain deep insights into spending patterns
+- 🏪 **Small Businesses** - Professional receipt management without overhead costs
 
 ---
 
 ## 💡 Why This System?
 
-### The Problem
-- 📄 Physical receipts get lost, damaged, or fade over time
-- ⏱️ Manually entering receipt data is slow and boring
-- 📊 Hard to see where your money goes without organization
-- 📑 Creating expense reports takes hours of work
-- 🔍 No easy way to filter and analyze past expenses
+### The Challenge
+- 📄 **Physical receipts deteriorate** - Fading ink, damage, or loss over time
+- ⏱️ **Manual entry is inefficient** - Time-consuming and error-prone
+- 📊 **Spending visibility is limited** - Difficult to track expenses without organization
+- 📑 **Report generation is tedious** - Hours spent compiling expense summaries
+- 🔍 **Historical analysis is cumbersome** - No streamlined way to filter past transactions
 
 ### The Solution
-receiptAI automates everything:
-1. **Scan** → Point your camera at any receipt
-2. **Extract** → AI reads merchant, date, amount automatically
-3. **Organize** → Categorize expenses (Food, Transport, Office, etc.)
-4. **Store** → Everything saved securely in the cloud
-5. **Report** → Generate PDF summaries instantly
-6. **Analyze** → See spending patterns with visual charts
+receiptAI delivers complete automation:
+1. **Scan** → Capture receipt with camera or upload image
+2. **Extract** → AI-powered OCR reads merchant, date, amount, and items
+3. **Organize** → Automatic categorization (Food, Transport, Office, etc.)
+4. **Store** → Secure cloud storage with instant access
+5. **Report** → Professional PDF generation in seconds
+6. **Analyze** → Visual insights into spending patterns and trends
 
 ---
 
 ## ✨ Key Features
 
-### 1. **Smart Receipt Scanning**
-- Take photos with your mobile camera
-- Upload existing receipt images
-- AI extracts all details automatically (merchant, date, total, items)
-- Edit any extracted data if needed
-- Works offline - scans now, syncs later
+### 1. **Intelligent Receipt Scanning**
+- Capture receipts via mobile camera or image upload
+- AI-powered data extraction (merchant, date, total, line items)
+- Full data editing capabilities for accuracy verification
+- Offline scanning with automatic cloud synchronization
 
-### 2. **Custom Categories**
-- Create your own expense categories (e.g., "Client Meetings", "Software Tools")
-- Choose colors and icons for each category
-- Organize receipts exactly how you want
-- Easy to add, edit, or remove categories anytime
+### 2. **Customizable Categories**
+- Create unlimited expense categories tailored to your workflow
+- Customize colors and icons for visual organization
+- Full CRUD operations (Create, Read, Update, Delete)
+- Real-time synchronization across all devices
 
-### 3. **Professional PDF Reports**
-- Clean, formatted PDF for each receipt
-- Download to your device
-- Share via email or messaging apps
-- Both original receipt and summary PDF stored
-- Perfect for expense reimbursements
+### 3. **Professional PDF Reporting**
+- Auto-generated formatted PDFs for each receipt
+- Local download and multi-platform sharing capabilities
+- Dual storage: Original receipt image + summary PDF
+- Enterprise-ready for expense reimbursement workflows
 
-### 4. **Expense Analytics**
-- Filter receipts by date range
-- See total spending for any period
-- Visual charts show which categories cost the most
-- Identify your biggest and smallest expense categories
-- Track spending trends over time
+### 4. **Advanced Analytics Dashboard**
+- Flexible date range filtering with preset durations
+- Comprehensive spending totals and category breakdowns
+- Interactive charts visualizing expense distribution
+- Trend analysis identifying spending patterns over time
 
-### 5. **Mobile-First Design**
-- Works perfectly on phones and tablets
-- Install like a native app (PWA)
-- Fast, smooth, touch-friendly interface
-- No app store download needed
-- Access from any device with a browser
+### 5. **Progressive Web Application (PWA)**
+- Responsive design optimized for mobile and tablet devices
+- Install as native app with "Add to Home Screen" functionality
+- Touch-optimized interface with smooth animations
+- Zero app store downloads required - instant browser access
 
 ---
 
-## 🔐 Authentication System
+## 🔐 Authentication & Security
 
-### Secure Email-Based Authentication
-receiptAI uses a **secure OTP-based authentication system** to protect your data:
+### Enterprise-Grade Authentication
+receiptAI implements a **secure OTP-based authentication system** with industry-standard security practices:
 
-#### Security Features
-- ✅ **Password Strength Requirements**: 8+ characters, uppercase, number, special character
-- ✅ **Email Verification Required**: Account only created after OTP confirmation
-- ✅ **OTP Expiry**: Codes expire in 10 minutes for security
-- ✅ **Auto-Logout**: Sessions expire after 1 hour of inactivity
-- ✅ **Secure Password Reset**: OTP-based password recovery flow
-- ✅ **No Unverified Accounts**: Database stays clean with verified users only
+#### Security Architecture
+- 🔒 **Password Complexity Enforcement**: Minimum 8 characters, uppercase, lowercase, numeric, and special character requirements
+- 📧 **Email Verification Protocol**: Account creation requires OTP confirmation, preventing unverified registrations
+- ⏰ **OTP Expiration**: Time-limited codes (10-minute expiry) enhance security
+- 🔄 **Automatic Session Management**: 60-minute inactivity timeout with auto-logout
+- 🔐 **Secure Password Recovery**: OTP-verified password reset workflow
+- ✅ **Verified Users Only**: Database maintains only validated accounts
 
-#### How It Works
-1. **Signup** → Enter email + strong password → Receive 6-digit OTP via email
-2. **Verify OTP** → Enter code from email → Account created automatically
-3. **Login** → Email + password → Access dashboard
-4. **Forgot Password** → Email → OTP → Set new password
-5. **Auto-Logout** → No activity for 1 hour → Session expires
+#### Authentication Workflow
+1. **Registration** → Email + password submission → 6-digit OTP delivery via email
+2. **Verification** → OTP confirmation → Account activation and creation
+3. **Login** → Credentials verification → Dashboard access
+4. **Password Recovery** → Email request → OTP verification → Secure password update
+5. **Session Management** → Activity tracking → Automatic logout after 60 minutes inactivity
 
-#### Email Delivery
-- Uses **Nodemailer with Gmail SMTP** for reliable delivery
-- Professional HTML emails with clear OTP display
-- Works with any email provider (Gmail, Hotmail, Yahoo, etc.)
-- No domain verification required
+#### Email Infrastructure
+- **Delivery System**: Nodemailer with Gmail SMTP for reliable message transmission
+- **Professional Templates**: HTML-formatted emails with clear OTP presentation
+- **Universal Compatibility**: Works with all major email providers (Gmail, Outlook, Yahoo, etc.)
+- **No Domain Verification**: Seamless deployment without DNS configuration
 
 ---
 
 ## 🛠️ Technology Stack
 
-### Built With Free Tools
-- **Frontend**: React + Vite (fast, modern web framework)
-- **Database**: PostgreSQL via Supabase (free tier)
-- **AI/OCR**: Tesseract.js (free, open-source OCR)
-- **PDF Generation**: jsPDF (client-side PDF creation)
-- **Charts**: Recharts (beautiful data visualizations)
-- **Storage**: Supabase Storage (for receipts and PDFs)
-- **Authentication**: Supabase Auth (secure login)
-- **Frontend**: https://receipt-ai-xi.vercel.app (Live Demo)
-- **Backend**: https://receiptai-backend-rgf8.onrender.com (API)
-- **Monitoring**: https://uptimerobot.com (Uptime monitoring)
+### Production-Grade Architecture
+receiptAI leverages modern, battle-tested technologies with generous free tiers:
 
-**Cost-Effective** - All tools have generous free tiers perfect for personal use.
+#### Core Technologies
+- **Frontend Framework**: React 19 + TypeScript + Vite
+- **Backend Runtime**: Node.js + Express.js
+- **Database**: PostgreSQL (Supabase managed infrastructure)
+- **Authentication**: Supabase Auth with JWT tokens
+- **Storage**: Supabase Storage (receipts and PDFs)
+- **AI/OCR Engine**: Tesseract.js (open-source) with ocr.space fallback
+- **Data Visualization**: Recharts for interactive analytics
+- **PDF Generation**: jsPDF + html2pdf.js (client-side)
+- **Monitoring**: UptimeRobot (24/7 uptime tracking)
+
+#### Deployment Infrastructure
+- **Frontend Hosting**: Vercel (CDN, automatic deployments)
+  - **URL**: https://receipt-ai-xi.vercel.app
+- **Backend Hosting**: Render.com (auto-scaling, SSL)
+  - **URL**: https://receiptai-backend-rgf8.onrender.com
+- **Uptime Monitoring**: UptimeRobot (5-minute intervals)
+  - **Status**: 100% uptime maintained
+
+**Cost Efficiency**: $0 monthly operational costs using free tier services.
 
 ---
 
@@ -272,9 +282,9 @@ receiptAI will be successful when:
 
 ---
 
-**Last Updated**: April 19, 2026  
+**Last Updated**: April 22, 2026  
 **Version**: 1.0.0  
-**Status**: ✅ Feature Complete - Ready for Testing & Deployment
+**Status**: ✅ Production Deployed | **Demo**: https://receipt-ai-xi.vercel.app
 
 ---
 
