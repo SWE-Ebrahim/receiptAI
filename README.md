@@ -108,7 +108,9 @@ receiptAI uses a **secure OTP-based authentication system** to protect your data
 - **Charts**: Recharts (beautiful data visualizations)
 - **Storage**: Supabase Storage (for receipts and PDFs)
 - **Authentication**: Supabase Auth (secure login)
-- **Hosting**: Vercel/Netlify (free deployment)
+- **Frontend**: https://receipt-ai-xi.vercel.app (Live Demo)
+- **Backend**: https://receiptai-backend-rgf8.onrender.com (API)
+- **Monitoring**: https://uptimerobot.com (Uptime monitoring)
 
 **Cost-Effective** - All tools have generous free tiers perfect for personal use.
 
@@ -346,11 +348,11 @@ receiptAI/
 - ✅ Cache invalidation on data changes
 - ✅ Database load reduced by 50-80%
 
-### Day 5: Testing & Deployment Preparation (April 19 - 20, 2026)
+### Day 5: Testing & Deployment (April 19 - 20, 2026)
 - ✅ Comprehensive testing completed
 - ✅ Screenshot documentation added
-- ⏳ Production deployment (pending)
-- ⏳ Live demo URL setup (pending)
+- ✅ Production deployment complete
+- ✅ Live demo URL: https://receipt-ai-xi.vercel.app
 
 **Result**: Production-ready full-stack application with:
 - ✅ Complete authentication system with security best practices
