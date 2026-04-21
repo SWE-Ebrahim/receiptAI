@@ -478,9 +478,10 @@ const login = async (req, res) => {
       });
     }
 
-    // Get username from user_metadata (stored as full_name during signup)
+    // Get username from user_metadata (check all possible field names)
     const userMetadata = data.user.user_metadata || {};
-    const fullName = userMetadata.full_name || '';
+    // Priority: full_name (legacy) > display_name > name
+    const fullName = userMetadata.full_name || userMetadata.display_name || userMetadata.name || '';
     
     res.json({
       success: true,
@@ -855,11 +856,12 @@ const updateProfile = async (req, res) => {
 
     const trimmedName = name.trim();
 
-    // Update user metadata in Supabase Auth (both name and display_name)
+    // Update user metadata in Supabase Auth (update ALL name fields for consistency)
     const { data, error } = await supabaseAdmin.auth.admin.updateUserById(userId, {
       user_metadata: { 
         name: trimmedName,
-        display_name: trimmedName // Keep display_name in sync with name
+        display_name: trimmedName,
+        full_name: trimmedName // Also update legacy full_name field
       },
     });
 
