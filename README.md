@@ -1,7 +1,6 @@
 # receiptAI - Smart Expense Tracker
 
 > **Live Demo**: https://receipt-ai-xi.vercel.app  
-> **API**: https://receiptai-backend-rgf8.onrender.com  
 > **Status**: ✅ Production Ready | **Monitoring**: UptimeRobot 100% Uptime
 
 ## 🎯 What is receiptAI?
@@ -118,7 +117,6 @@ receiptAI leverages modern, battle-tested technologies with generous free tiers:
 - **Frontend Hosting**: Vercel (CDN, automatic deployments)
   - **URL**: https://receipt-ai-xi.vercel.app
 - **Backend Hosting**: Render.com (auto-scaling, SSL)
-  - **URL**: https://receiptai-backend-rgf8.onrender.com
 - **Uptime Monitoring**: UptimeRobot (5-minute intervals)
   - **Status**: 100% uptime maintained
 
